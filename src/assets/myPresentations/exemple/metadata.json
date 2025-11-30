@@ -1,0 +1,9 @@
+{
+  "displayName": "Guide Markdown",
+  "description": "Guide pratique pour utiliser Markdown dans vos présentations",
+  "type": "Démonstration",
+  "tags": ["Markdown", "Documentation", "Formatage", "Guide"],
+  "prerequisites": [],
+  "estimatedDuration": "30min",
+  "level": "Débutant"
+}
