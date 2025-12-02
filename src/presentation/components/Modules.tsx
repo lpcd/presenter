@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { InlineMarkdown } from "../../presentationMode/components/InlineMarkdown";
+import { InlineMarkdown } from "../subpages/presentationMode/components/InlineMarkdown";
 
 interface ModuleItem {
   id: number;

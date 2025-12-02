@@ -1,7 +1,7 @@
 import { Play, ChevronDown, Home } from "lucide-react";
 import { motion } from "framer-motion";
 import type { HeroConfig } from "../presentation.types";
-import { InlineMarkdown } from "../../presentationMode/components/InlineMarkdown";
+import { InlineMarkdown } from "../subpages/presentationMode/components/InlineMarkdown";
 
 interface HeroHeaderProps {
   config?: HeroConfig;

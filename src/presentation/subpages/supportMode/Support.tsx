@@ -4,7 +4,7 @@ import type { ParsedContent } from "../presentationMode/types";
 import { SupportMode } from "../presentationMode/components/SupportMode";
 import { LoadingState } from "../presentationMode/components/LoadingState";
 import { ErrorState } from "../presentationMode/components/ErrorState";
-import { getPresentation } from "../overview/presentationLoader";
+import { getPresentation } from "../../presentationLoader";
 import { PresentationHeader } from "../presentationMode/components/PresentationHeader";
 import { parseMarkdown } from "../presentationMode/utils/markdownParser";
 

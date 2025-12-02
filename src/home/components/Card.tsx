@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { BookOpen, Clock, Award } from "lucide-react";
 import { InlineMarkdown } from "../../presentation/subpages/presentationMode/components/InlineMarkdown";
 
-interface PresentationCardProps {
+interface CardProps {
   id: string;
   name: string;
   description: string;
@@ -18,7 +18,7 @@ interface PresentationCardProps {
   };
 }
 
-const PresentationCard = ({
+const Card = ({
   name,
   description,
   duration,
@@ -31,7 +31,7 @@ const PresentationCard = ({
     via: "via-primary-dark",
     to: "to-secondary",
   },
-}: PresentationCardProps) => {
+}: CardProps) => {
   return (
     <motion.a
       href={link}
@@ -92,4 +92,4 @@ const PresentationCard = ({
   );
 };
 
-export default PresentationCard;
+export default Card;

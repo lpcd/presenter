@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Search, X } from "lucide-react";
-import PresentationCard from "./PresentationCard";
+import Card from "./Card";
 
 // Palette de couleurs pour les cartes (tons plus sombres pour meilleur contraste)
 const colorPalette = [
@@ -45,11 +45,11 @@ interface Presentation {
   tags: string[];
 }
 
-interface PresentationListProps {
+interface PresentationsProps {
   presentations: Presentation[];
 }
 
-const PresentationList = ({ presentations }: PresentationListProps) => {
+const Presentations = ({ presentations }: PresentationsProps) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredPresentations = useMemo(() => {
@@ -128,7 +128,7 @@ const PresentationList = ({ presentations }: PresentationListProps) => {
                 transition={{ duration: 0.2, delay: 0.05 * index }}
                 className="flex"
               >
-                <PresentationCard
+                <Card
                   id={presentation.id}
                   name={presentation.name}
                   description={presentation.description}
@@ -148,4 +148,4 @@ const PresentationList = ({ presentations }: PresentationListProps) => {
   );
 };
 
-export default PresentationList;
+export default Presentations;

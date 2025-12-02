@@ -1,2 +1,2 @@
-export { default as PresentationCard } from "./PresentationCard";
-export { default as PresentationList } from "./PresentationList";
+export { default as Card } from "./Card";
+export { default as Presentations } from "./Presentations";

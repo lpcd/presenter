@@ -1,8 +1,9 @@
 import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { GraduationCap } from "lucide-react";
-import PresentationList from "./components/PresentationList";
+import Presentations from "./components/Presentations";
 import { getAllPresentations, type PresentationData } from "../presentation";
+import { homeConfig } from "./homeConfig";
 
 const Home = () => {
   const [presentations, setPresentations] = useState<PresentationData[]>([]);
@@ -48,14 +49,22 @@ const Home = () => {
       >
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center shadow-md">
-              <GraduationCap size={24} className="text-white" />
-            </div>
+            {homeConfig.icon ? (
+              <img
+                src={homeConfig.icon}
+                alt="Logo"
+                className="w-10 h-10 rounded-lg shadow-md object-cover"
+              />
+            ) : (
+              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center shadow-md">
+                <GraduationCap size={24} className="text-white" />
+              </div>
+            )}
             <div>
-              <h1 className="text-xl font-bold text-gray-900">Hub</h1>
-              <p className="text-sm text-gray-600">
-                Ma plateforme de présentations
-              </p>
+              <h1 className="text-xl font-bold text-gray-900">
+                {homeConfig.title}
+              </h1>
+              <p className="text-sm text-gray-600">{homeConfig.subtitle}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -77,13 +86,13 @@ const Home = () => {
       >
         <div className="max-w-4xl mx-auto">
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-            Mes présentations
+            {homeConfig.heroTitle}
           </h1>
         </div>
       </motion.section>
 
       {/* Presentations List with Search */}
-      <PresentationList presentations={presentations} />
+      <Presentations presentations={presentations} />
 
       {/* Footer */}
       <motion.footer
@@ -92,7 +101,7 @@ const Home = () => {
         transition={{ duration: 0.3, delay: 0.2 }}
         className="py-12 px-4 text-center text-gray-600 border-t border-gray-200"
       >
-        <p>© 2025 - Plateforme de présentations</p>
+        <p>© 2025 - {homeConfig.footer}</p>
       </motion.footer>
     </div>
   );

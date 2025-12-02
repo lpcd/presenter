@@ -5,7 +5,7 @@ import { PresentationHeader } from "./components/PresentationHeader";
 import { PresentationMode } from "./components/PresentationMode";
 import { LoadingState } from "./components/LoadingState";
 import { ErrorState } from "./components/ErrorState";
-import { getPresentation } from "../overview/presentationLoader";
+import { getPresentation } from "../../presentationLoader";
 import { parseMarkdown } from "./utils/markdownParser";
 
 // Charger tous les fichiers markdown dynamiquement depuis tous les dossiers de formations

@@ -1,16 +1,13 @@
 // Charger tous les fichiers markdown dynamiquement depuis tous les dossiers de présentations
-const moduleFiles = import.meta.glob(
-  "../../../assets/myPresentations/**/*.md",
-  {
-    query: "?raw",
-    import: "default",
-    eager: true,
-  }
-) as Record<string, string>;
+const moduleFiles = import.meta.glob("../assets/myPresentations/**/*.md", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+}) as Record<string, string>;
 
 // Charger tous les fichiers metadata.json
 const metadataFiles = import.meta.glob(
-  "../../../assets/myPresentations/**/metadata.json",
+  "../assets/myPresentations/**/metadata.json",
   {
     import: "default",
     eager: true,
