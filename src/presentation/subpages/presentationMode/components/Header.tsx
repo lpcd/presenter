@@ -119,42 +119,6 @@ export const Header = ({
         </motion.h1>
 
         <div className="flex items-center gap-3">
-          {/* Bouton plein écran (uniquement en mode présentation) */}
-          {viewMode === "presentation" && (
-            <motion.button
-              onClick={onToggleFullscreen}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg font-semibold text-sm transition-all text-white/70 hover:text-white hover:bg-white/10"
-              title={
-                isFullscreen
-                  ? "Quitter le plein écran (Esc)"
-                  : "Plein écran (F11)"
-              }
-            >
-              {isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}
-            </motion.button>
-          )}
-          {/* Bouton verrouillage contrôles (uniquement en mode présentation) */}
-          {viewMode === "presentation" && onToggleControlsLock && (
-            <motion.button
-              onClick={onToggleControlsLock}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg font-semibold text-sm transition-all ${
-                isControlsLocked
-                  ? "bg-white/20 text-white"
-                  : "text-white/70 hover:text-white hover:bg-white/10"
-              }`}
-              title={
-                isControlsLocked
-                  ? "Contrôles verrouillés - Cliquez pour déverrouiller"
-                  : "Verrouiller les contrôles"
-              }
-            >
-              {isControlsLocked ? <Lock size={16} /> : <Unlock size={16} />}
-            </motion.button>
-          )}
           {/* Toggle mode */}
           <div className="flex gap-2 bg-white/5 rounded-lg p-1">
             <motion.button
@@ -217,6 +181,42 @@ export const Header = ({
               )}{" "}
               / {totalSlides}
             </div>
+          )}
+          {/* Bouton verrouillage contrôles (uniquement en mode présentation) */}
+          {viewMode === "presentation" && onToggleControlsLock && (
+            <motion.button
+              onClick={onToggleControlsLock}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg font-semibold text-sm transition-all ${
+                isControlsLocked
+                  ? "bg-white/20 text-white"
+                  : "text-white/70 hover:text-white hover:bg-white/10"
+              }`}
+              title={
+                isControlsLocked
+                  ? "Contrôles verrouillés - Cliquez pour déverrouiller"
+                  : "Verrouiller les contrôles"
+              }
+            >
+              {isControlsLocked ? <Lock size={16} /> : <Unlock size={16} />}
+            </motion.button>
+          )}
+          {/* Bouton plein écran (uniquement en mode présentation) */}
+          {viewMode === "presentation" && (
+            <motion.button
+              onClick={onToggleFullscreen}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg font-semibold text-sm transition-all text-white/70 hover:text-white hover:bg-white/10"
+              title={
+                isFullscreen
+                  ? "Quitter le plein écran (Esc)"
+                  : "Plein écran (F11)"
+              }
+            >
+              {isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}
+            </motion.button>
           )}
         </div>
       </div>

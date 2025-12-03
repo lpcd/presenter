@@ -37,7 +37,7 @@ const Presentation = () => {
   );
   const [presentationName, setPresentationName] = useState<string>("");
   const [isEditingSlideNumber, setIsEditingSlideNumber] = useState(false);
-  const [isControlsLocked, setIsControlsLocked] = useState(false);
+  const [isControlsLocked, setIsControlsLocked] = useState(true);
 
   const handleViewModeChange = useCallback(
     (mode: "presentation" | "support") => {
@@ -60,14 +60,24 @@ const Presentation = () => {
   }, []);
 
   useEffect(() => {
+    if (isControlsLocked) {
+      // Annuler tous les timeouts en cours et forcer l'affichage
+      if (hideControlsTimeout) {
+        clearTimeout(hideControlsTimeout);
+        setHideControlsTimeout(null);
+      }
+      setShowControls(true);
+      return;
+    }
+
     const timeout = window.setTimeout(() => {
       setShowControls(false);
-    }, 2000);
+    }, 3000);
 
     return () => {
       clearTimeout(timeout);
     };
-  }, []);
+  }, [isControlsLocked, hideControlsTimeout]);
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent) => {
@@ -92,7 +102,7 @@ const Presentation = () => {
         }
         const timeout = window.setTimeout(() => {
           setShowControls(false);
-        }, 2000);
+        }, 3000);
         setHideControlsTimeout(timeout);
       } else if (showControls) {
         setShowControls(false);
