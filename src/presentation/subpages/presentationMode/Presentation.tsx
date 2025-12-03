@@ -38,6 +38,17 @@ const Presentation = () => {
   const [presentationName, setPresentationName] = useState<string>("");
   const [isEditingSlideNumber, setIsEditingSlideNumber] = useState(false);
   const [isControlsLocked, setIsControlsLocked] = useState(true);
+  const [allModules, setAllModules] = useState<
+    Array<{
+      id: number;
+      title: string;
+      description: string;
+      filename: string;
+      duration: string;
+      topics: string[];
+    }>
+  >([]);
+  const [currentModuleIndex, setCurrentModuleIndex] = useState<number>(0);
 
   const handleViewModeChange = useCallback(
     (mode: "presentation" | "support") => {
@@ -91,7 +102,7 @@ const Presentation = () => {
         return;
       }
 
-      const showThreshold = 80;
+      const showThreshold = 180;
       const isNearTop = e.clientY < showThreshold;
       const isNearBottom = e.clientY > window.innerHeight - showThreshold;
 
@@ -159,6 +170,8 @@ const Presentation = () => {
           const currentIndex = presentation.modules.findIndex(
             (m) => m.filename === mdFilename
           );
+          setCurrentModuleIndex(currentIndex);
+          setAllModules(presentation.modules);
 
           if (currentIndex < presentation.modules.length - 1) {
             const next = presentation.modules[currentIndex + 1];
@@ -278,6 +291,8 @@ const Presentation = () => {
         presentationId={presentationId}
         moduleTitle={moduleTitle}
         showControls={showControls}
+        allModules={allModules}
+        currentModuleIndex={currentModuleIndex}
       />
     </div>
   );

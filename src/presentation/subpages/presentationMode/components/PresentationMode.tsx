@@ -15,6 +15,15 @@ interface PresentationModeProps {
   presentationId: string | undefined;
   moduleTitle: string;
   showControls: boolean;
+  allModules: Array<{
+    id: number;
+    title: string;
+    description: string;
+    filename: string;
+    duration: string;
+    topics: string[];
+  }>;
+  currentModuleIndex: number;
 }
 
 export const PresentationMode = ({
@@ -26,6 +35,8 @@ export const PresentationMode = ({
   presentationId,
   moduleTitle,
   showControls,
+  allModules,
+  currentModuleIndex,
 }: PresentationModeProps) => {
   const navigate = useNavigate();
   const mainRef = useRef<HTMLElement>(null);
@@ -156,6 +167,10 @@ export const PresentationMode = ({
           onPrevious={goToPreviousSlide}
           onNext={goToNextSlide}
           onGoToSlide={onSlideChange}
+          sections={content.sections}
+          presentationId={presentationId}
+          allModules={allModules}
+          currentModuleIndex={currentModuleIndex}
         />
       </div>
     </>
