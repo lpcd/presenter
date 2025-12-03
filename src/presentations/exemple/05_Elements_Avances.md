@@ -1,4 +1,4 @@
-# Éléments Avancés et Bonnes Pratiques
+# Exemples
 
 ## Blocs de citations avancés
 
@@ -89,6 +89,8 @@ function updateUser(user, updates) {
 - Database : PostgreSQL
 - Auth : JWT + bcrypt
 
+### 📊 Exemple de documentation complète
+
 **Étapes d'implémentation**
 
 1. **Configuration de la base de données**
@@ -117,6 +119,8 @@ function updateUser(user, updates) {
      }
    }
    ```
+
+### 📊 Exemple de documentation complète
 
 3. **Intégration frontend**
    - [x] Formulaire de login

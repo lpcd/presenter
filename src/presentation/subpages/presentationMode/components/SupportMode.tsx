@@ -33,6 +33,23 @@ export const SupportMode = ({
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
   const navigate = useNavigate();
 
+  // Filtrer les sections pour ne garder que la première occurrence des titres dupliqués
+  // et utiliser le contenu fusionné pour ces sections
+  const filteredSections = content.sections
+    .filter(
+      (section) => !section.duplicateInfo || section.duplicateInfo.isFirst
+    )
+    .map((section) => {
+      // Si c'est un titre dupliqué (première occurrence), utiliser le contenu fusionné
+      if (section.duplicateInfo && section.mergedContent) {
+        return {
+          ...section,
+          content: section.mergedContent,
+        };
+      }
+      return section;
+    });
+
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 300);
@@ -121,7 +138,7 @@ export const SupportMode = ({
         </motion.div>
 
         <div className="bg-white rounded-2xl shadow-2xl p-8 sm:p-12 space-y-12 overflow-x-hidden">
-          {content.sections.map((section, index) => (
+          {filteredSections.map((section, index) => (
             <motion.article
               key={index}
               ref={(el) => {
@@ -207,7 +224,7 @@ export const SupportMode = ({
               </button>
             </div>
             <div className="space-y-2">
-              {content.sections.map((section, index) => (
+              {filteredSections.map((section, index) => (
                 <button
                   key={index}
                   onClick={() => {

@@ -92,6 +92,11 @@ export const SlideContent = ({
         }`}
       >
         {section.heading}
+        {section.duplicateInfo && (
+          <span className="ml-2">
+            ({section.duplicateInfo.current}/{section.duplicateInfo.total})
+          </span>
+        )}
       </motion.h2>
 
       {hasNoContent && subsections.length > 0 ? (

@@ -89,5 +89,50 @@ export const parseMarkdown = (
     });
   }
 
-  return { title, sections };
+  // Post-traitement : détecter les titres dupliqués et ajouter les infos de compteur
+  const headingCounts = new Map<string, number>();
+  const headingOccurrences = new Map<string, number>();
+  const headingContents = new Map<string, string[]>();
+
+  // Compter les occurrences de chaque titre et collecter les contenus
+  sections.forEach((section) => {
+    const count = headingCounts.get(section.heading) || 0;
+    headingCounts.set(section.heading, count + 1);
+
+    const contents = headingContents.get(section.heading) || [];
+    contents.push(section.content);
+    headingContents.set(section.heading, contents);
+  });
+
+  // Enrichir les sections avec les informations de duplication
+  const enrichedSections = sections.map((section) => {
+    const totalOccurrences = headingCounts.get(section.heading) || 1;
+
+    if (totalOccurrences > 1) {
+      const currentOccurrence =
+        (headingOccurrences.get(section.heading) || 0) + 1;
+      headingOccurrences.set(section.heading, currentOccurrence);
+
+      // Préparer le contenu fusionné pour le mode support (toutes les occurrences)
+      const mergedContent = (headingContents.get(section.heading) || []).join(
+        "\n\n"
+      );
+
+      return {
+        ...section,
+        // En mode présentation, on garde le contenu original de chaque section
+        // En mode support, on utilisera mergedContent via duplicateInfo
+        mergedContent, // Contenu fusionné pour le mode support
+        duplicateInfo: {
+          current: currentOccurrence,
+          total: totalOccurrences,
+          isFirst: currentOccurrence === 1,
+        },
+      };
+    }
+
+    return section;
+  });
+
+  return { title, sections: enrichedSections };
 };
