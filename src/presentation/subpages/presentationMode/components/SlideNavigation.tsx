@@ -22,7 +22,6 @@ export const SlideNavigation = ({
   onNext,
   onGoToSlide,
 }: SlideNavigationProps) => {
-  // Calculer les slides visibles (11 points maximum, centrés sur la slide actuelle)
   const visibleSlides = useMemo(() => {
     const maxVisible = 11;
     if (totalSlides <= maxVisible) {
@@ -33,7 +32,6 @@ export const SlideNavigation = ({
     let start = Math.max(0, currentSlide - halfVisible);
     const end = Math.min(totalSlides - 1, start + maxVisible - 1);
 
-    // Ajuster si on est proche de la fin
     if (end - start < maxVisible - 1) {
       start = Math.max(0, end - maxVisible + 1);
     }
@@ -49,7 +47,6 @@ export const SlideNavigation = ({
       className="bg-black/30 backdrop-blur-sm text-white py-6 px-6 border-t border-white/10 z-20"
     >
       <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
-        {/* Navigation gauche */}
         <div className="flex items-center gap-2">
           <motion.button
             onClick={() => onGoToSlide(0)}
@@ -81,7 +78,6 @@ export const SlideNavigation = ({
           </motion.button>
         </div>
 
-        {/* Indicateurs de slides */}
         <div className="flex gap-2 px-2">
           {visibleSlides.map((index) => (
             <motion.button
@@ -99,7 +95,6 @@ export const SlideNavigation = ({
           ))}
         </div>
 
-        {/* Navigation droite */}
         <div className="flex items-center gap-2">
           <motion.button
             onClick={onNext}

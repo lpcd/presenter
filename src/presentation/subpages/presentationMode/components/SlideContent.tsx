@@ -10,33 +10,27 @@ interface SlideContentProps {
   currentSectionIndex?: number;
 }
 
-// Variantes d'animations professionnelles
 const slideAnimations = [
-  // Slide horizontal classique
   {
     initial: { opacity: 0, x: 100 },
     animate: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: -100 },
   },
-  // Fade simple
   {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
     exit: { opacity: 0 },
   },
-  // Scale et fade
   {
     initial: { opacity: 0, scale: 0.95 },
     animate: { opacity: 1, scale: 1 },
     exit: { opacity: 0, scale: 1.05 },
   },
-  // Slide vertical
   {
     initial: { opacity: 0, y: 50 },
     animate: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: -50 },
   },
-  // Rotation légère
   {
     initial: { opacity: 0, rotateY: -10 },
     animate: { opacity: 1, rotateY: 0 },
@@ -50,26 +44,30 @@ export const SlideContent = ({
   allSections = [],
   currentSectionIndex = 0,
 }: SlideContentProps) => {
-  // Vérifier si la section n'a pas de contenu
   const hasNoContent = !section.content || section.content.trim().length === 0;
 
-  // Sélectionner une animation basée sur l'index de la slide
   const animation = slideAnimations[slideIndex % slideAnimations.length];
 
-  // Si pas de contenu, trouver les sous-sections suivantes (sections avec un niveau supérieur)
   const subsections =
     hasNoContent && allSections.length > 0
-      ? allSections.slice(currentSectionIndex + 1).filter((s, idx, arr) => {
-          // Prendre les sections de niveau supérieur jusqu'à la prochaine section du même niveau ou inférieur
-          if (s.level > section.level) {
-            // Vérifier qu'il n'y a pas de section de niveau égal ou inférieur avant
-            const hasParentBefore = arr
-              .slice(0, idx)
-              .some((prev) => prev.level <= section.level);
-            return !hasParentBefore;
+      ? (() => {
+          const result: ParsedContent["sections"] = [];
+          const startIndex = currentSectionIndex + 1;
+
+          for (let i = startIndex; i < allSections.length; i++) {
+            const s = allSections[i];
+
+            if (s.level <= section.level) {
+              break;
+            }
+
+            if (s.level === section.level + 1) {
+              result.push(s);
+            }
           }
-          return false;
-        })
+
+          return result;
+        })()
       : [];
 
   return (

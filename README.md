@@ -18,5 +18,5 @@ Présentation markdown visuelle avec application web
 
 Les fichiers markdown utilisés pour les présentations se trouvent dans le dossier :
 
-- Pour les présentations personnalisées, allez dans `src/assets/myPresentations/` puis dans le dossier de la présentation souhaitée (ex : `exemple/`).
+- Pour les présentations personnalisées, allez dans `src/presentations/` puis dans le dossier de la présentation souhaitée (ex : `exemple/`).
 - Chaque présentation peut contenir plusieurs fichiers markdown (`00_Plan.md`, `01_Formatage_Texte.md`, etc.), un fichier `metadata.json` et un sous-dossier `ressources/` pour les ressources associées.

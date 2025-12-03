@@ -5,18 +5,14 @@ import { SupportMode } from "../presentationMode/components/SupportMode";
 import { LoadingState } from "../presentationMode/components/LoadingState";
 import { ErrorState } from "../presentationMode/components/ErrorState";
 import { getPresentation } from "../../presentationLoader";
-import { PresentationHeader } from "../presentationMode/components/PresentationHeader";
+import { Header } from "../presentationMode/components/Header";
 import { parseMarkdown } from "../presentationMode/utils/markdownParser";
 
-// Charger tous les fichiers markdown dynamiquement
-const moduleFiles = import.meta.glob(
-  "../../../assets/myPresentations/**/*.md",
-  {
-    query: "?raw",
-    import: "default",
-    eager: true,
-  }
-) as Record<string, string>;
+const moduleFiles = import.meta.glob("../../../presentations/**/*.md", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+}) as Record<string, string>;
 
 const Support = () => {
   const { presentationId, filename } = useParams<{
@@ -59,9 +55,8 @@ const Support = () => {
         const mdFilename = filename || "00_Plan";
         const folder = presentationId || "dotnet_unit_testing";
 
-        // Chercher le fichier dans moduleFiles par pattern
         const fileKey = Object.keys(moduleFiles).find((key) =>
-          key.includes(`myPresentations/${folder}/${mdFilename}.md`)
+          key.includes(`presentations/${folder}/${mdFilename}.md`)
         );
 
         if (!fileKey) {
@@ -84,7 +79,7 @@ const Support = () => {
         }
 
         const markdown = moduleFiles[fileKey];
-        const parsed = parseMarkdown(markdown);
+        const parsed = parseMarkdown(markdown, false);
         setContent(parsed);
       } catch (err) {
         setError(
@@ -124,7 +119,7 @@ const Support = () => {
 
   return (
     <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col min-h-screen">
-      <PresentationHeader
+      <Header
         presentationId={presentationId}
         title={content.title}
         currentSlide={0}

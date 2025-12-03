@@ -24,7 +24,6 @@ const HeroHeader = ({ config = defaultConfig }: HeroHeaderProps) => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen relative bg-gradient-to-br from-primary to-primary-dark text-white px-4 sm:px-8">
-      {/* Bouton Accueil */}
       <motion.a
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}

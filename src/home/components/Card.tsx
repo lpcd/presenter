@@ -40,7 +40,6 @@ const Card = ({
       transition={{ duration: 0.2 }}
       className="flex flex-col h-full bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-shadow overflow-hidden group"
     >
-      {/* Header avec gradient */}
       <div
         className={`h-32 bg-gradient-to-br ${colorGradient.from} ${colorGradient.via} ${colorGradient.to} relative overflow-hidden`}
       >
@@ -52,13 +51,11 @@ const Card = ({
         </div>
       </div>
 
-      {/* Contenu */}
       <div className="flex-1 p-6 flex flex-col">
         <p className="text-gray-600 mb-4 line-clamp-2">
           <InlineMarkdown content={description} />
         </p>
 
-        {/* Métadonnées */}
         <div className="flex flex-wrap gap-3 mb-4">
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <Clock size={16} className="text-primary" />
@@ -74,7 +71,6 @@ const Card = ({
           </div>
         </div>
 
-        {/* Tags avec scroll horizontal */}
         <div className="flex-1 mb-4">
           <div className="flex flex-wrap gap-2">
             {tags.map((tag) => (

@@ -40,7 +40,6 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      {/* Header */}
       <motion.header
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -77,7 +76,6 @@ const Home = () => {
         </div>
       </motion.header>
 
-      {/* Hero Section */}
       <motion.section
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -91,10 +89,8 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {/* Presentations List with Search */}
       <Presentations presentations={presentations} />
 
-      {/* Footer */}
       <motion.footer
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

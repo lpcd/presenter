@@ -30,11 +30,13 @@ const Modules = ({ modules = defaultModules }: ModulesProps) => {
       </motion.h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-7xl w-full">
         {modules.map((module, index) => {
-          // Toujours utiliser un div comme wrapper pour éviter <a> dans <a>
-          const Wrapper = motion.div;
+          const Wrapper = module.link ? motion.a : motion.div;
+          const wrapperProps = module.link ? { href: module.link } : {};
+
           return (
             <Wrapper
               key={module.id}
+              {...wrapperProps}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -42,7 +44,9 @@ const Modules = ({ modules = defaultModules }: ModulesProps) => {
               whileHover={{ y: -8, scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className={`relative bg-white rounded-2xl p-6 sm:p-8 shadow-md before:absolute before:top-0 before:left-0 before:w-full before:h-1 before:bg-gradient-to-r before:from-primary before:to-primary-dark before:rounded-t-xl focus-within:ring-4 focus-within:ring-primary/20 ${
-                module.link ? "cursor-pointer" : ""
+                module.link
+                  ? "cursor-pointer hover:shadow-xl transition-shadow"
+                  : ""
               }`}
             >
               <div className="flex items-center gap-4 mb-3">
@@ -56,18 +60,9 @@ const Modules = ({ modules = defaultModules }: ModulesProps) => {
                   {module.id}
                 </motion.div>
                 <div className="flex-1 min-w-0">
-                  {module.link ? (
-                    <a
-                      href={module.link}
-                      className="text-xl sm:text-2xl font-semibold text-gray-800 mb-1 line-clamp-2 hover:underline focus:underline"
-                    >
-                      <InlineMarkdown content={module.title} />
-                    </a>
-                  ) : (
-                    <h3 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-1 line-clamp-2">
-                      <InlineMarkdown content={module.title} />
-                    </h3>
-                  )}
+                  <h3 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-1 line-clamp-2">
+                    <InlineMarkdown content={module.title} />
+                  </h3>
                 </div>
                 {module.duration && (
                   <p className="text-xs sm:text-sm text-primary font-medium">

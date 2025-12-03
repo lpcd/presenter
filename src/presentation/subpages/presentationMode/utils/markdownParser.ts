@@ -1,10 +1,9 @@
 import type { ParsedContent } from "../types";
 
-/**
- * Parse un contenu markdown en structure JSON
- * Extrait le titre principal (premier h1) et les sections (autres headings)
- */
-export const parseMarkdown = (markdown: string): ParsedContent => {
+export const parseMarkdown = (
+  markdown: string,
+  enableSplits: boolean = true
+): ParsedContent => {
   const lines = markdown.split("\n");
   const sections: ParsedContent["sections"] = [];
   let title = "";
@@ -14,28 +13,50 @@ export const parseMarkdown = (markdown: string): ParsedContent => {
     level: number;
   } | null = null;
   let inCodeBlock = false;
+  let consecutiveSeparators = 0;
+  let splitCounter = 1;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    // Nettoyer les retours chariot Windows (\r)
     const cleanLine = line.replace(/\r$/, "");
+    const trimmedLine = cleanLine.trim();
 
-    // Détecter le début ou la fin d'un bloc de code
-    if (cleanLine.trim().startsWith("```")) {
+    if (trimmedLine.startsWith("```")) {
       inCodeBlock = !inCodeBlock;
       if (currentSection !== null) {
         currentSection.content += cleanLine + "\n";
       }
+      consecutiveSeparators = 0;
       continue;
     }
 
-    // Ne pas traiter les lignes à l'intérieur d'un bloc de code comme des headings
+    if (!inCodeBlock && trimmedLine === "---") {
+      consecutiveSeparators++;
+      continue;
+    }
+
+    if (consecutiveSeparators > 0) {
+      if (consecutiveSeparators >= 2 && enableSplits) {
+        if (currentSection) {
+          sections.push({
+            ...currentSection,
+            content: currentSection.content.trim(),
+          });
+          currentSection = null;
+        }
+      }
+      consecutiveSeparators = 0;
+
+      if (trimmedLine === "") {
+        continue;
+      }
+    }
+
     const headingMatch = !inCodeBlock
       ? cleanLine.match(/^(#{1,6})\s+(.+)$/)
       : null;
 
     if (headingMatch) {
-      // Sauvegarder la section précédente si elle existe
       if (currentSection) {
         sections.push({
           ...currentSection,
@@ -46,12 +67,10 @@ export const parseMarkdown = (markdown: string): ParsedContent => {
       const level = headingMatch[1].length;
       const heading = headingMatch[2].trim();
 
-      // Le premier titre de niveau 1 devient le titre principal
       if (level === 1 && !title) {
         title = heading;
         currentSection = null;
       } else {
-        // Créer une nouvelle section pour tous les autres headings
         currentSection = {
           heading,
           content: "",
@@ -59,12 +78,10 @@ export const parseMarkdown = (markdown: string): ParsedContent => {
         };
       }
     } else if (currentSection !== null) {
-      // Ajouter toutes les lignes à la section courante
       currentSection.content += cleanLine + "\n";
     }
   }
 
-  // Ajouter la dernière section si elle existe
   if (currentSection) {
     sections.push({
       ...currentSection,

@@ -1,22 +1,18 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import type { ParsedContent } from "./types";
-import { PresentationHeader } from "./components/PresentationHeader";
+import { Header } from "./components/Header";
 import { PresentationMode } from "./components/PresentationMode";
 import { LoadingState } from "./components/LoadingState";
 import { ErrorState } from "./components/ErrorState";
 import { getPresentation } from "../../presentationLoader";
 import { parseMarkdown } from "./utils/markdownParser";
 
-// Charger tous les fichiers markdown dynamiquement depuis tous les dossiers de formations
-const moduleFiles = import.meta.glob(
-  "../../../assets/myPresentations/**/*.md",
-  {
-    query: "?raw",
-    import: "default",
-    eager: true,
-  }
-) as Record<string, string>;
+const moduleFiles = import.meta.glob("../../../presentations/**/*.md", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+}) as Record<string, string>;
 
 const Presentation = () => {
   const { presentationId, filename } = useParams<{
@@ -40,7 +36,8 @@ const Presentation = () => {
     null
   );
   const [presentationName, setPresentationName] = useState<string>("");
-  const [zoomLevel, setZoomLevel] = useState<number>(1);
+  const [isEditingSlideNumber, setIsEditingSlideNumber] = useState(false);
+  const [isControlsLocked, setIsControlsLocked] = useState(false);
 
   const handleViewModeChange = useCallback(
     (mode: "presentation" | "support") => {
@@ -51,7 +48,6 @@ const Presentation = () => {
     [navigate, presentationId, filename]
   );
 
-  // Gestion du plein écran
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
@@ -63,9 +59,7 @@ const Presentation = () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
   }, []);
 
-  // Auto-masquage des contrôles après 2 secondes au chargement initial
   useEffect(() => {
-    // Seulement au premier chargement
     const timeout = window.setTimeout(() => {
       setShowControls(false);
     }, 2000);
@@ -73,10 +67,20 @@ const Presentation = () => {
     return () => {
       clearTimeout(timeout);
     };
-  }, []); // Tableau vide = exécuté une seule fois
+  }, []);
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent) => {
+      if (isControlsLocked) {
+        setShowControls(true);
+        return;
+      }
+
+      if (isEditingSlideNumber) {
+        setShowControls(true);
+        return;
+      }
+
       const showThreshold = 80;
       const isNearTop = e.clientY < showThreshold;
       const isNearBottom = e.clientY > window.innerHeight - showThreshold;
@@ -91,7 +95,6 @@ const Presentation = () => {
         }, 2000);
         setHideControlsTimeout(timeout);
       } else if (showControls) {
-        // Si on s'éloigne des bords, masquer immédiatement
         setShowControls(false);
         if (hideControlsTimeout) {
           clearTimeout(hideControlsTimeout);
@@ -99,7 +102,7 @@ const Presentation = () => {
         }
       }
     },
-    [hideControlsTimeout, showControls]
+    [hideControlsTimeout, showControls, isEditingSlideNumber, isControlsLocked]
   );
 
   const toggleFullscreen = useCallback(async () => {
@@ -116,13 +119,11 @@ const Presentation = () => {
       setError(null);
 
       try {
-        // Construire le chemin du fichier markdown
         const mdFilename = filename || "00_Plan";
         const folder = presentationId || "dotnet_unit_testing";
 
-        // Chercher par pattern dans les clés disponibles
         const fileKey = Object.keys(moduleFiles).find((key) =>
-          key.includes(`myPresentations/${folder}/${mdFilename}.md`)
+          key.includes(`presentations/${folder}/${mdFilename}.md`)
         );
 
         if (!fileKey) {
@@ -135,10 +136,8 @@ const Presentation = () => {
 
         const markdown = moduleFiles[fileKey];
 
-        // Parser le markdown avec une fonction simple
         const parsed = parseMarkdown(markdown);
 
-        // Trouver le titre du module dans la configuration
         const presentation = folder ? getPresentation(folder) : null;
         const module = presentation?.modules.find(
           (m) => m.filename === mdFilename
@@ -146,7 +145,6 @@ const Presentation = () => {
         setModuleTitle(module?.title || "");
         setPresentationName(presentation?.name || "");
 
-        // Trouver le module suivant
         if (presentation && module) {
           const currentIndex = presentation.modules.findIndex(
             (m) => m.filename === mdFilename
@@ -164,7 +162,6 @@ const Presentation = () => {
           }
         }
 
-        // Définir le contenu
         setContent(parsed);
       } catch (err) {
         setError(
@@ -184,13 +181,15 @@ const Presentation = () => {
     (e: React.KeyboardEvent) => {
       if (!content) return;
 
-      // Gestion de la touche Escape pour quitter le plein écran
+      if (isEditingSlideNumber) {
+        return;
+      }
+
       if (e.key === "Escape" && document.fullscreenElement) {
         document.exitFullscreen();
         return;
       }
 
-      // Gestion de F11 pour le plein écran
       if (e.key === "F11") {
         e.preventDefault();
         toggleFullscreen();
@@ -209,21 +208,9 @@ const Presentation = () => {
         if (currentSlide > 0) {
           setCurrentSlide(currentSlide - 1);
         }
-      } else if (e.key === "+" || e.key === "=") {
-        // Zoom in avec + ou =
-        e.preventDefault();
-        setZoomLevel((prev) => Math.min(prev + 0.1, 2));
-      } else if (e.key === "-" || e.key === "_") {
-        // Zoom out avec - ou _
-        e.preventDefault();
-        setZoomLevel((prev) => Math.max(prev - 0.1, 0.5));
-      } else if (e.key === "0") {
-        // Reset zoom avec 0
-        e.preventDefault();
-        setZoomLevel(1);
       }
     },
-    [content, currentSlide, toggleFullscreen, nextModule]
+    [content, currentSlide, toggleFullscreen, nextModule, isEditingSlideNumber]
   );
 
   if (loading) {
@@ -246,7 +233,6 @@ const Presentation = () => {
       onMouseMove={handleMouseMove}
       tabIndex={0}
     >
-      {/* Header - masqué automatiquement en mode présentation */}
       <div
         className={`fixed top-0 left-0 right-0 transition-all duration-300 ${
           !showControls
@@ -255,7 +241,7 @@ const Presentation = () => {
         }`}
         style={{ zIndex: 50 }}
       >
-        <PresentationHeader
+        <Header
           presentationId={presentationId}
           title={content.title}
           currentSlide={currentSlide}
@@ -267,6 +253,9 @@ const Presentation = () => {
           isFullscreen={isFullscreen}
           onToggleFullscreen={toggleFullscreen}
           onSlideChange={setCurrentSlide}
+          onEditingChange={setIsEditingSlideNumber}
+          isControlsLocked={isControlsLocked}
+          onToggleControlsLock={() => setIsControlsLocked(!isControlsLocked)}
         />
       </div>
 
@@ -278,7 +267,6 @@ const Presentation = () => {
         nextModule={nextModule}
         presentationId={presentationId}
         moduleTitle={moduleTitle}
-        zoomLevel={zoomLevel}
         showControls={showControls}
       />
     </div>

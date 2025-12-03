@@ -15,21 +15,16 @@ export const InlineMarkdown = ({
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
-          // Forcer le rendu inline en supprimant les paragraphes
           p: ({ children }) => <>{children}</>,
-          // Styliser strong
           strong: ({ children }) => (
             <strong className="font-bold">{children}</strong>
           ),
-          // Styliser em
           em: ({ children }) => <em className="italic">{children}</em>,
-          // Styliser le code inline
           code: ({ children }) => (
             <code className="bg-primary/10 text-primary px-1.5 py-0.5 rounded font-mono text-sm">
               {children}
             </code>
           ),
-          // Styliser les liens
           a: ({ href, children }) => (
             <a
               href={href}

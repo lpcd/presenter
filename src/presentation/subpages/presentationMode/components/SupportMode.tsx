@@ -150,7 +150,6 @@ export const SupportMode = ({
         </div>
       </div>
 
-      {/* Menu des modules */}
       <AnimatePresence>
         {showModulesMenu && (
           <motion.div
@@ -189,7 +188,6 @@ export const SupportMode = ({
         )}
       </AnimatePresence>
 
-      {/* Sommaire */}
       <AnimatePresence>
         {showTableOfContents && (
           <motion.div
@@ -236,9 +234,7 @@ export const SupportMode = ({
         )}
       </AnimatePresence>
 
-      {/* Boutons flottants */}
       <div className="fixed bottom-8 right-8 flex flex-col gap-3 z-30">
-        {/* Scroll to top */}
         <AnimatePresence>
           {showScrollTop && (
             <motion.button
@@ -257,7 +253,6 @@ export const SupportMode = ({
           )}
         </AnimatePresence>
 
-        {/* Navigation entre sections */}
         <motion.button
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -283,7 +278,6 @@ export const SupportMode = ({
         </motion.button>
       </div>
 
-      {/* Boutons de menu fixes */}
       <div className="fixed left-4 bottom-8 flex flex-col gap-3 z-30">
         <motion.button
           initial={{ opacity: 0, scale: 0.8 }}

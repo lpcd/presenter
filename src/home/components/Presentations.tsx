@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { Search, X } from "lucide-react";
 import Card from "./Card";
 
-// Palette de couleurs pour les cartes (tons plus sombres pour meilleur contraste)
 const colorPalette = [
   { from: "from-blue-800", via: "via-blue-900", to: "to-indigo-950" },
   { from: "from-purple-800", via: "via-purple-900", to: "to-pink-950" },
@@ -23,10 +22,7 @@ const colorPalette = [
   { from: "from-slate-800", via: "via-slate-900", to: "to-gray-950" },
 ];
 
-// Fonction pour obtenir un index de couleur qui évite les répétitions côte à côte
 const getColorIndex = (currentIndex: number, columns: number = 3): number => {
-  // Pour une grille de 3 colonnes, on utilise un pattern qui évite les répétitions
-  // en alternant intelligemment les couleurs
   const row = Math.floor(currentIndex / columns);
   const col = currentIndex % columns;
 
@@ -70,7 +66,6 @@ const Presentations = ({ presentations }: PresentationsProps) => {
       transition={{ duration: 0.3, delay: 0.1 }}
       className="pb-12 px-4 max-w-7xl mx-auto"
     >
-      {/* Barre de recherche */}
       <div className="mb-8 max-w-2xl mx-auto">
         <div className="relative">
           <Search
@@ -102,7 +97,6 @@ const Presentations = ({ presentations }: PresentationsProps) => {
         )}
       </div>
 
-      {/* Grille de présentations */}
       {filteredPresentations.length === 0 ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}

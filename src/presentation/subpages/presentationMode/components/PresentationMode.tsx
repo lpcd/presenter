@@ -14,7 +14,6 @@ interface PresentationModeProps {
   nextModule: { id: number; title: string; filename: string } | null;
   presentationId: string | undefined;
   moduleTitle: string;
-  zoomLevel: number;
   showControls: boolean;
 }
 
@@ -26,7 +25,6 @@ export const PresentationMode = ({
   nextModule,
   presentationId,
   moduleTitle,
-  zoomLevel,
   showControls,
 }: PresentationModeProps) => {
   const navigate = useNavigate();
@@ -69,10 +67,6 @@ export const PresentationMode = ({
         className="flex-1 flex items-center justify-center p-4 sm:p-8 overflow-y-auto"
         onKeyDown={onKeyDown}
         tabIndex={0}
-        style={{
-          transform: `scale(${zoomLevel})`,
-          transformOrigin: "center",
-        }}
       >
         <div className="w-full max-w-5xl relative flex items-center justify-center py-8">
           <AnimatePresence mode="wait">
@@ -94,9 +88,6 @@ export const PresentationMode = ({
                   <h2 className="text-5xl sm:text-6xl font-bold mb-8">
                     {moduleTitle}
                   </h2>
-                  <p className="text-xl sm:text-2xl opacity-90">
-                    {content.title}
-                  </p>
                 </motion.div>
               </motion.div>
             ) : isLastSlide && nextModule ? (
