@@ -1,5 +1,7 @@
 # Exemples
 
+durée : 0min
+
 ## Blocs de citations avancés
 
 ### Citation avec auteur

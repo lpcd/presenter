@@ -1,5 +1,7 @@
 # Listes et tableaux
 
+durée : 5min
+
 ## Listes non ordonnées
 
 **Liste simple**

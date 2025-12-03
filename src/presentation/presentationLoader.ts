@@ -86,7 +86,8 @@ function parseModuleFile(markdown: string): {
 }
 
 function estimateDuration(markdown: string): string {
-  const durationMatch = markdown.match(/durée\s*:\s*(\d+h?\d*)/i);
+  // Rechercher une durée explicite : "durée : 2h", "durée : 45min", "durée : 1h30"
+  const durationMatch = markdown.match(/durée\s*:\s*(\d+h?\d*(?:min)?)/i);
   if (durationMatch) {
     return durationMatch[1];
   }

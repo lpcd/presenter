@@ -1,5 +1,7 @@
 # Liens et médias
 
+durée : 10min
+
 ## Liens hypertextes
 
 **Lien simple**

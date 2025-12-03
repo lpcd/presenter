@@ -1,5 +1,7 @@
 # Guide Markdown
 
+durée : 5min
+
 ## Objectifs
 
 - Découvrir toutes les fonctionnalités de formatage

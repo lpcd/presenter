@@ -1,5 +1,7 @@
 # Code et coloration syntaxique
 
+durée : 5min
+
 ## Blocs de code simples
 
 Utilisez trois backticks pour créer des blocs de code :

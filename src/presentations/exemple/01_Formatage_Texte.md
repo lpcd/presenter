@@ -1,5 +1,7 @@
 # Formatage de texte
 
+durée : 10min
+
 ## Styles de base
 
 ### Code inline
