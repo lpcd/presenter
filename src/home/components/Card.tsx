@@ -11,6 +11,7 @@ interface CardProps {
   type: string;
   tags: string[];
   link: string;
+  moduleText?: string;
   colorGradient?: {
     from: string;
     via: string;
@@ -26,6 +27,7 @@ const Card = ({
   type,
   tags,
   link,
+  moduleText,
   colorGradient = {
     from: "from-primary",
     via: "via-primary-dark",
@@ -46,7 +48,7 @@ const Card = ({
         <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors" />
         <div className="absolute bottom-4 left-6 right-6">
           <h3 className="text-2xl font-bold text-white drop-shadow-lg">
-            <InlineMarkdown content={name} />
+            <InlineMarkdown content={moduleText || name} />
           </h3>
         </div>
       </div>

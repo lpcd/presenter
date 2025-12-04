@@ -16,6 +16,7 @@ export interface PresentationModule {
   filename: string;
   duration: string;
   topics: string[];
+  moduleText?: string;
 }
 
 export interface PresentationData {
@@ -51,10 +52,12 @@ function parseModuleFile(markdown: string): {
   title: string;
   description: string;
   topics: string[];
+  moduleText?: string;
 } {
   const lines = markdown.split("\n");
   let title = "";
   let description = "";
+  let moduleText: string | undefined = undefined;
   const topics: string[] = [];
 
   for (let i = 0; i < lines.length; i++) {
@@ -65,12 +68,21 @@ function parseModuleFile(markdown: string): {
       continue;
     }
 
+    // Extraire le champ "module"
+    const moduleMatch = cleanLine.match(/^module\s*:\s*(.+)$/i);
+    if (moduleMatch) {
+      moduleText = moduleMatch[1].trim();
+      continue;
+    }
+
     if (
       title &&
       !description &&
       cleanLine &&
       !cleanLine.startsWith("#") &&
-      !cleanLine.startsWith("-")
+      !cleanLine.startsWith("-") &&
+      !cleanLine.toLowerCase().startsWith("module") &&
+      !cleanLine.toLowerCase().startsWith("durée")
     ) {
       description = cleanLine;
     }
@@ -82,7 +94,7 @@ function parseModuleFile(markdown: string): {
     }
   }
 
-  return { title, description, topics };
+  return { title, description, topics, moduleText };
 }
 
 function estimateDuration(markdown: string): string {
@@ -145,6 +157,11 @@ export function discoverPresentations(): PresentationData[] {
     const moduleInfo = parseModuleFile(content);
     const moduleIndex = parseInt(filename.match(/^(\d+)_/)?.[1] || "999");
 
+    // Ne pas ajouter le module si moduleText contient "_"
+    if (moduleInfo.moduleText && moduleInfo.moduleText.includes("_")) {
+      continue;
+    }
+
     presentation.modules.push({
       id: moduleIndex,
       title: moduleInfo.title || filename.replace(/_/g, " "),
@@ -152,6 +169,7 @@ export function discoverPresentations(): PresentationData[] {
       filename: filename,
       duration: estimateDuration(content),
       topics: moduleInfo.topics.slice(0, 5),
+      moduleText: moduleInfo.moduleText,
     });
   }
 

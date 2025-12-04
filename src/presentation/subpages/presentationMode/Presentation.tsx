@@ -293,6 +293,8 @@ const Presentation = () => {
         showControls={showControls}
         allModules={allModules}
         currentModuleIndex={currentModuleIndex}
+        isControlsLocked={isControlsLocked}
+        onToggleControlsLock={() => setIsControlsLocked(!isControlsLocked)}
       />
     </div>
   );

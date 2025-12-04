@@ -51,6 +51,7 @@ const Presentation = () => {
       link: `/presentations/${presentation.id}/presentation/${module.filename}`,
       duration: module.duration,
       topics: module.topics,
+      moduleText: module.moduleText,
     }));
   }, [presentation]);
 

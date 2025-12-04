@@ -1,5 +1,6 @@
 # Code et coloration syntaxique
 
+module : 2
 durée : 5min
 
 ## Blocs de code simples

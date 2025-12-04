@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronLeft,
@@ -31,6 +31,8 @@ interface SlideNavigationProps {
     topics: string[];
   }>;
   currentModuleIndex: number;
+  isControlsLocked?: boolean;
+  onToggleControlsLock?: () => void;
 }
 
 export const SlideNavigation = ({
@@ -43,10 +45,20 @@ export const SlideNavigation = ({
   presentationId,
   allModules,
   currentModuleIndex,
+  isControlsLocked = false,
+  onToggleControlsLock,
 }: SlideNavigationProps) => {
   const [showModulesMenu, setShowModulesMenu] = useState(false);
   const [showTableOfContents, setShowTableOfContents] = useState(false);
   const navigate = useNavigate();
+
+  // Fermer les menus quand on déverrouille
+  useEffect(() => {
+    if (!isControlsLocked) {
+      setShowModulesMenu(false);
+      setShowTableOfContents(false);
+    }
+  }, [isControlsLocked]);
   const visibleSlides = useMemo(() => {
     const maxVisible = 11;
     if (totalSlides <= maxVisible) {
@@ -256,7 +268,13 @@ export const SlideNavigation = ({
         <motion.button
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          onClick={() => setShowModulesMenu(!showModulesMenu)}
+          onClick={() => {
+            setShowModulesMenu(!showModulesMenu);
+            // Verrouiller la barre si elle est déverrouillée
+            if (!isControlsLocked && onToggleControlsLock) {
+              onToggleControlsLock();
+            }
+          }}
           className="bg-primary text-white p-4 rounded-full shadow-2xl hover:bg-primary/90 transition-colors"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
@@ -269,7 +287,13 @@ export const SlideNavigation = ({
         <motion.button
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          onClick={() => setShowTableOfContents(!showTableOfContents)}
+          onClick={() => {
+            setShowTableOfContents(!showTableOfContents);
+            // Verrouiller la barre si elle est déverrouillée
+            if (!isControlsLocked && onToggleControlsLock) {
+              onToggleControlsLock();
+            }
+          }}
           className="bg-white text-primary p-4 rounded-full shadow-xl hover:shadow-2xl hover:bg-gray-50 transition-all"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}

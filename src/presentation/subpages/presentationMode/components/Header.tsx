@@ -62,6 +62,10 @@ export const Header = ({
       setInputValue(String(currentSlide + 1));
       setIsEditing(true);
       onEditingChange?.(true);
+      // Verrouiller la barre si elle est déverrouillée
+      if (!isControlsLocked && onToggleControlsLock) {
+        onToggleControlsLock();
+      }
     }
   };
 
@@ -155,6 +159,7 @@ export const Header = ({
               className="text-white/60 text-sm font-medium px-4 py-2.5 bg-white/5 rounded-lg whitespace-nowrap cursor-pointer hover:bg-white/10 transition-colors inline-flex items-center h-[42px]"
               onClick={handleSlideNumberClick}
               title="Cliquez pour aller à une slide spécifique"
+              style={{ minWidth: "6rem" }}
             >
               {isEditing ? (
                 <input
@@ -188,7 +193,7 @@ export const Header = ({
               onClick={onToggleControlsLock}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg font-semibold text-sm transition-all ${
+              className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg font-semibold text-sm transition-all h-[42px] ${
                 isControlsLocked
                   ? "bg-white/20 text-white"
                   : "text-white/70 hover:text-white hover:bg-white/10"
@@ -208,7 +213,7 @@ export const Header = ({
               onClick={onToggleFullscreen}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg font-semibold text-sm transition-all text-white/70 hover:text-white hover:bg-white/10"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg font-semibold text-sm transition-all text-white/70 hover:text-white hover:bg-white/10 h-[42px]"
               title={
                 isFullscreen
                   ? "Quitter le plein écran (Esc)"

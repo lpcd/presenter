@@ -24,6 +24,8 @@ interface PresentationModeProps {
     topics: string[];
   }>;
   currentModuleIndex: number;
+  isControlsLocked?: boolean;
+  onToggleControlsLock?: () => void;
 }
 
 export const PresentationMode = ({
@@ -37,6 +39,8 @@ export const PresentationMode = ({
   showControls,
   allModules,
   currentModuleIndex,
+  isControlsLocked = false,
+  onToggleControlsLock,
 }: PresentationModeProps) => {
   const navigate = useNavigate();
   const mainRef = useRef<HTMLElement>(null);
@@ -171,6 +175,8 @@ export const PresentationMode = ({
           presentationId={presentationId}
           allModules={allModules}
           currentModuleIndex={currentModuleIndex}
+          isControlsLocked={isControlsLocked}
+          onToggleControlsLock={onToggleControlsLock}
         />
       </div>
     </>

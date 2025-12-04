@@ -1,6 +1,7 @@
 # Exemples
 
-durée : 0min
+module : +
+durée : 0
 
 ## Blocs de citations avancés
 

@@ -8,6 +8,7 @@ interface ModuleItem {
   link?: string;
   duration?: string;
   topics?: string[];
+  moduleText?: string;
 }
 
 interface ModulesProps {
@@ -57,18 +58,20 @@ const Modules = ({ modules = defaultModules }: ModulesProps) => {
                   transition={{ duration: 0.25, delay: index * 0.05 + 0.1 }}
                   className="flex-shrink-0 inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary to-primary-dark text-white text-xl sm:text-2xl font-bold rounded-xl"
                 >
-                  {module.id}
+                  {module.moduleText ? <>{module.moduleText}</> : module.id}
                 </motion.div>
                 <div className="flex-1 min-w-0">
                   <h3 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-1 line-clamp-2">
                     <InlineMarkdown content={module.title} />
                   </h3>
                 </div>
-                {module.duration && (
-                  <p className="text-xs sm:text-sm text-primary font-medium">
-                    ⏱️ {module.duration}
-                  </p>
-                )}
+                {module.duration &&
+                  module.duration !== "0" &&
+                  module.duration !== "0min" && (
+                    <p className="text-xs sm:text-sm text-primary font-medium">
+                      ⏱️ {module.duration}
+                    </p>
+                  )}
               </div>
               <div className="text-sm sm:text-base text-gray-600 leading-relaxed mb-3">
                 <InlineMarkdown content={module.description} />
