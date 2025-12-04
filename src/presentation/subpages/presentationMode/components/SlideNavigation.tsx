@@ -52,7 +52,6 @@ export const SlideNavigation = ({
   const [showTableOfContents, setShowTableOfContents] = useState(false);
   const navigate = useNavigate();
 
-  // Fermer les menus quand on déverrouille
   useEffect(() => {
     if (!isControlsLocked) {
       setShowModulesMenu(false);
@@ -174,7 +173,6 @@ export const SlideNavigation = ({
         </div>
       </div>
 
-      {/* Menus latéraux */}
       <AnimatePresence>
         {showModulesMenu && (
           <motion.div
@@ -236,7 +234,7 @@ export const SlideNavigation = ({
                 <button
                   key={index}
                   onClick={() => {
-                    onGoToSlide(index + 1); // +1 car la première slide est l'intro
+                    onGoToSlide(index + 1);
                     setShowTableOfContents(false);
                   }}
                   className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
@@ -270,7 +268,6 @@ export const SlideNavigation = ({
           animate={{ opacity: 1, scale: 1 }}
           onClick={() => {
             setShowModulesMenu(!showModulesMenu);
-            // Verrouiller la barre si elle est déverrouillée
             if (!isControlsLocked && onToggleControlsLock) {
               onToggleControlsLock();
             }
@@ -289,7 +286,6 @@ export const SlideNavigation = ({
           animate={{ opacity: 1, scale: 1 }}
           onClick={() => {
             setShowTableOfContents(!showTableOfContents);
-            // Verrouiller la barre si elle est déverrouillée
             if (!isControlsLocked && onToggleControlsLock) {
               onToggleControlsLock();
             }

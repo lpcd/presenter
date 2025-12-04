@@ -8,7 +8,7 @@ import { getPresentation } from "../../presentationLoader";
 import { Header } from "../presentationMode/components/Header";
 import { parseMarkdown } from "../presentationMode/utils/markdownParser";
 
-const moduleFiles = import.meta.glob("../../../presentations/**/*.md", {
+const moduleFiles = import.meta.glob("../../../assets/presentations/**/*.md", {
   query: "?raw",
   import: "default",
   eager: true,
@@ -56,7 +56,7 @@ const Support = () => {
         const folder = presentationId || "dotnet_unit_testing";
 
         const fileKey = Object.keys(moduleFiles).find((key) =>
-          key.includes(`presentations/${folder}/${mdFilename}.md`)
+          key.includes(`assets/presentations/${folder}/${mdFilename}.md`)
         );
 
         if (!fileKey) {
@@ -111,7 +111,6 @@ const Support = () => {
     return null;
   }
 
-  // Trouver le module suivant
   let nextModule = null;
   if (allModules.length > 0 && currentModuleIndex < allModules.length - 1) {
     nextModule = allModules[currentModuleIndex + 1];

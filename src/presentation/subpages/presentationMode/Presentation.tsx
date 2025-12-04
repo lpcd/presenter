@@ -8,7 +8,7 @@ import { ErrorState } from "./components/ErrorState";
 import { getPresentation } from "../../presentationLoader";
 import { parseMarkdown } from "./utils/markdownParser";
 
-const moduleFiles = import.meta.glob("../../../presentations/**/*.md", {
+const moduleFiles = import.meta.glob("../../../assets/presentations/**/*.md", {
   query: "?raw",
   import: "default",
   eager: true,
@@ -144,7 +144,7 @@ const Presentation = () => {
         const folder = presentationId || "dotnet_unit_testing";
 
         const fileKey = Object.keys(moduleFiles).find((key) =>
-          key.includes(`presentations/${folder}/${mdFilename}.md`)
+          key.includes(`assets/presentations/${folder}/${mdFilename}.md`)
         );
 
         if (!fileKey) {

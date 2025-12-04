@@ -46,12 +46,12 @@ export const PresentationMode = ({
   const mainRef = useRef<HTMLElement>(null);
 
   const totalSlides = useMemo(
-    () => content.sections.length + (nextModule ? 1 : 0) + 1, // +1 pour la slide d'introduction
+    () => content.sections.length + (nextModule ? 1 : 0) + 1,
     [content.sections.length, nextModule]
   );
   const isLastSlide = currentSlide === content.sections.length + 1;
   const currentSection = useMemo(
-    () => content.sections[currentSlide - 1], // -1 car la première slide est l'intro
+    () => content.sections[currentSlide - 1],
     [content.sections, currentSlide]
   );
 
@@ -76,7 +76,6 @@ export const PresentationMode = ({
 
   return (
     <>
-      {/* Slide principale */}
       <main
         ref={mainRef}
         className="flex-1 flex items-center justify-center p-4 sm:p-8 overflow-y-auto"
@@ -156,7 +155,6 @@ export const PresentationMode = ({
         </div>
       </main>
 
-      {/* Navigation en bas - masquée automatiquement en mode présentation */}
       <div
         className={`fixed bottom-0 left-0 right-0 transition-all duration-300 ${
           !showControls

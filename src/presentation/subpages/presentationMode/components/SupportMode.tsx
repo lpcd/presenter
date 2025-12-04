@@ -33,14 +33,11 @@ export const SupportMode = ({
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
   const navigate = useNavigate();
 
-  // Filtrer les sections pour ne garder que la première occurrence des titres dupliqués
-  // et utiliser le contenu fusionné pour ces sections
   const filteredSections = content.sections
     .filter(
       (section) => !section.duplicateInfo || section.duplicateInfo.isFirst
     )
     .map((section) => {
-      // Si c'est un titre dupliqué (première occurrence), utiliser le contenu fusionné
       if (section.duplicateInfo && section.mergedContent) {
         return {
           ...section,
@@ -125,7 +122,6 @@ export const SupportMode = ({
       className="flex-1 p-4 sm:p-8 pt-24 sm:pt-24"
     >
       <div className="max-w-4xl mx-auto">
-        {/* Titre du module */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}

@@ -1,13 +1,16 @@
-const moduleFiles = import.meta.glob("../presentations/**/*.md", {
+const moduleFiles = import.meta.glob("../assets/presentations/**/*.md", {
   query: "?raw",
   import: "default",
   eager: true,
 }) as Record<string, string>;
 
-const metadataFiles = import.meta.glob("../presentations/**/metadata.json", {
-  import: "default",
-  eager: true,
-}) as Record<string, PresentationMetadata>;
+const metadataFiles = import.meta.glob(
+  "../assets/presentations/**/metadata.json",
+  {
+    import: "default",
+    eager: true,
+  }
+) as Record<string, PresentationMetadata>;
 
 export interface PresentationModule {
   id: number;
@@ -68,7 +71,6 @@ function parseModuleFile(markdown: string): {
       continue;
     }
 
-    // Extraire le champ "module"
     const moduleMatch = cleanLine.match(/^module\s*:\s*(.+)$/i);
     if (moduleMatch) {
       moduleText = moduleMatch[1].trim();
@@ -98,7 +100,6 @@ function parseModuleFile(markdown: string): {
 }
 
 function estimateDuration(markdown: string): string {
-  // Rechercher une durée explicite : "durée : 2h", "durée : 45min", "durée : 1h30"
   const durationMatch = markdown.match(/durée\s*:\s*(\d+h?\d*(?:min)?)/i);
   if (durationMatch) {
     return durationMatch[1];
@@ -113,7 +114,7 @@ export function discoverPresentations(): PresentationData[] {
   const presentationsMap = new Map<string, PresentationData>();
 
   for (const [path, content] of Object.entries(moduleFiles)) {
-    const match = path.match(/presentations\/([^/]+)\/(.+)\.md$/);
+    const match = path.match(/assets\/presentations\/([^/]+)\/(.+)\.md$/);
     if (!match) continue;
 
     const [, presentationId, filename] = match;
@@ -157,7 +158,6 @@ export function discoverPresentations(): PresentationData[] {
     const moduleInfo = parseModuleFile(content);
     const moduleIndex = parseInt(filename.match(/^(\d+)_/)?.[1] || "999");
 
-    // Ne pas ajouter le module si moduleText contient "_"
     if (moduleInfo.moduleText && moduleInfo.moduleText.includes("_")) {
       continue;
     }

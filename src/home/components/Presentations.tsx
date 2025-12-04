@@ -25,8 +25,6 @@ const colorPalette = [
 const getColorIndex = (currentIndex: number, columns: number = 3): number => {
   const row = Math.floor(currentIndex / columns);
   const col = currentIndex % columns;
-
-  // Pattern qui assure qu'aucune couleur n'est côte à côte
   return (row * 2 + col) % colorPalette.length;
 };
 

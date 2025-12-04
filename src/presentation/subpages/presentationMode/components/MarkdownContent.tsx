@@ -39,7 +39,6 @@ export const MarkdownContent = ({ content }: MarkdownContentProps) => {
               );
             }
 
-            // Extraire le texte des children pour détecter les codes
             const childText =
               typeof children === "string"
                 ? children
@@ -47,7 +46,6 @@ export const MarkdownContent = ({ content }: MarkdownContentProps) => {
                 ? children.join("")
                 : "";
 
-            // Regex pour détecter le code et les dimensions (ex: "Video 400x300 VIDEO")
             const mediaMatch = childText.match(
               /^(.*?)\s*(?:(\d+)(?:x(\d+))?)?\s*(VIDEO|AUDIO|URL|PDF|EMBED)$/i
             );
@@ -225,7 +223,6 @@ export const MarkdownContent = ({ content }: MarkdownContentProps) => {
               );
             }
 
-            // Extraire les dimensions et le code du alt
             const match = alt?.match(
               /^(.+?)\s+(\d+)(?:x(\d+))?(?:\s+(VIDEO|AUDIO|URL|PDF|EMBED))?$/i
             );
