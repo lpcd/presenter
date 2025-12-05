@@ -141,3 +141,27 @@ function updateUser(user, updates) {
 | Token refresh  | 🔄     | 75%   |
 
 > 💡 **Note** : Toujours tester la sécurité avec des outils comme OWASP ZAP.
+
+## Exercice
+
+durée : 20 min
+repos : https://...
+description : Faites l'exercice...
+
+## Pause
+
+durée : 5 min
+
+## Dejeuner
+
+retour : 14h30
+
+## Vrai
+
+description : blabla...
+
+## Faux
+
+description : blabla...
+
+## Questions
