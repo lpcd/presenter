@@ -2,6 +2,19 @@ import { motion } from "framer-motion";
 import { MarkdownContent } from "./MarkdownContent";
 import type { ParsedContent } from "../types";
 import { ChevronRight } from "lucide-react";
+import { detectSpecialSlide } from "../utils/specialSlideDetector";
+import {
+  ExerciseSlide,
+  PauseSlide,
+  DejeunerSlide,
+  VraiSlide,
+  FauxSlide,
+  QuestionsSlide,
+  AttentionSlide,
+  ObjectifsSlide,
+  DemonstrationSlide,
+  RecapitulatifSlide,
+} from "../specialSlides";
 
 interface SlideContentProps {
   section: ParsedContent["sections"][0];
@@ -47,6 +60,60 @@ export const SlideContent = ({
   const hasNoContent = !section.content || section.content.trim().length === 0;
 
   const animation = slideAnimations[slideIndex % slideAnimations.length];
+
+  // Détecter si c'est une slide spéciale
+  const specialSlideData = detectSpecialSlide(
+    section.heading,
+    section.content,
+    section.level
+  );
+
+  // Si c'est une slide spéciale, afficher le composant correspondant
+  if (specialSlideData.type) {
+    switch (specialSlideData.type) {
+      case "exercice":
+        return (
+          <ExerciseSlide
+            duration={specialSlideData.duration}
+            repos={specialSlideData.repos}
+            description={specialSlideData.description}
+          />
+        );
+      case "pause":
+        return <PauseSlide duration={specialSlideData.duration} />;
+      case "dejeuner":
+        return <DejeunerSlide retour={specialSlideData.retour} />;
+      case "vrai":
+        return <VraiSlide description={specialSlideData.description} />;
+      case "faux":
+        return <FauxSlide description={specialSlideData.description} />;
+      case "questions":
+        return <QuestionsSlide />;
+      case "attention":
+        return <AttentionSlide description={specialSlideData.description} />;
+      case "objectifs":
+        return (
+          <ObjectifsSlide
+            items={specialSlideData.items}
+            description={specialSlideData.description}
+          />
+        );
+      case "demonstration":
+        return (
+          <DemonstrationSlide
+            titre={specialSlideData.titre}
+            description={specialSlideData.description}
+          />
+        );
+      case "recapitulatif":
+        return (
+          <RecapitulatifSlide
+            items={specialSlideData.items}
+            description={specialSlideData.description}
+          />
+        );
+    }
+  }
 
   const subsections =
     hasNoContent && allSections.length > 0

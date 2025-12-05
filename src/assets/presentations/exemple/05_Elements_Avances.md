@@ -144,24 +144,52 @@ function updateUser(user, updates) {
 
 ## Exercice
 
-durée : 20 min
-repos : https://...
-description : Faites l'exercice...
+durée : 30 min
+repos : https://github.com/formation/exercice-auth-jwt
+description : Implémentez un système d'authentification complet avec JWT en suivant les bonnes pratiques de sécurité
 
 ## Pause
 
-durée : 5 min
+durée : 15 min
 
 ## Dejeuner
 
-retour : 14h30
+retour : 13h30
 
 ## Vrai
 
-description : blabla...
+description : JWT (JSON Web Token) permet une authentification stateless, ce qui facilite la scalabilité des applications distribuées
 
 ## Faux
 
-description : blabla...
+description : Il est sûr de stocker les tokens JWT directement dans le localStorage sans aucune précaution supplémentaire
 
 ## Questions
+
+## Attention
+
+description : Cette opération va supprimer définitivement toutes les données. Assurez-vous d'avoir une sauvegarde complète avant de continuer.
+
+## Objectifs
+
+description : À la fin de ce module, vous serez capable de :
+
+- Utiliser les blocs de citations avancés
+- Intégrer du code avec coloration syntaxique
+- Créer des callouts et alertes visuelles
+- Implémenter des systèmes d'authentification sécurisés
+
+## Demonstration
+
+titre : Création d'un système d'auth complet
+description : Nous allons créer ensemble un système d'authentification sécurisé avec JWT, en suivant les bonnes pratiques de sécurité.
+
+## Recapitulatif
+
+description : Points clés à retenir de ce module
+
+- Les citations peuvent contenir du code et des callouts
+- Les blocs de code supportent la numérotation des lignes
+- Toujours valider les données côté serveur
+- JWT est idéal pour l'authentification stateless
+- Les tests de sécurité sont essentiels

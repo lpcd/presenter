@@ -1,0 +1,10 @@
+export { ExerciseSlide } from "./ExerciseSlide";
+export { PauseSlide } from "./PauseSlide";
+export { DejeunerSlide } from "./DejeunerSlide";
+export { VraiSlide } from "./VraiSlide";
+export { FauxSlide } from "./FauxSlide";
+export { QuestionsSlide } from "./QuestionsSlide";
+export { AttentionSlide } from "./AttentionSlide";
+export { ObjectifsSlide } from "./ObjectifsSlide";
+export { DemonstrationSlide } from "./DemonstrationSlide";
+export { RecapitulatifSlide } from "./RecapitulatifSlide";

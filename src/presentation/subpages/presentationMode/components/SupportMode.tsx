@@ -4,6 +4,7 @@ import type { ParsedContent } from "../types";
 import { ArrowUp, ChevronUp, ChevronDown, Menu, List } from "lucide-react";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { detectSpecialSlide } from "../utils/specialSlideDetector";
 
 interface SupportModeProps {
   content: ParsedContent;
@@ -37,6 +38,15 @@ export const SupportMode = ({
     .filter(
       (section) => !section.duplicateInfo || section.duplicateInfo.isFirst
     )
+    .filter((section) => {
+      // Filtrer les slides spéciales en mode support
+      const specialSlide = detectSpecialSlide(
+        section.heading,
+        section.content,
+        section.level
+      );
+      return !specialSlide.type;
+    })
     .map((section) => {
       if (section.duplicateInfo && section.mergedContent) {
         return {
