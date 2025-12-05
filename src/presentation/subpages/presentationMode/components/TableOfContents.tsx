@@ -19,6 +19,16 @@ export const TableOfContents = ({
   currentSlide,
   onGoToSlide,
 }: TableOfContentsProps) => {
+  // Compter les occurrences de chaque titre
+  const headingCounts = new Map<string, number>();
+  sections.forEach((section) => {
+    const count = headingCounts.get(section.heading) || 0;
+    headingCounts.set(section.heading, count + 1);
+  });
+
+  // Suivre l'index de chaque titre dupliqué
+  const headingIndexes = new Map<string, number>();
+
   return (
     <AnimatePresence>
       {show && (
@@ -39,32 +49,46 @@ export const TableOfContents = ({
             </button>
           </div>
           <div className="space-y-2">
-            {sections.map((section, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  onGoToSlide(index + 1);
-                  onClose();
-                }}
-                className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
-                  currentSlide === index + 1
-                    ? "bg-primary text-white"
-                    : "hover:bg-gray-100 text-gray-700"
-                }`}
-              >
-                <div
-                  className={`${
-                    section.level === 2
-                      ? "font-semibold"
-                      : section.level === 3
-                      ? "ml-2"
-                      : "ml-4 text-sm"
+            {sections.map((section, index) => {
+              const totalCount = headingCounts.get(section.heading) || 1;
+              const currentIndex =
+                (headingIndexes.get(section.heading) || 0) + 1;
+              headingIndexes.set(section.heading, currentIndex);
+
+              const showCounter = totalCount > 1;
+
+              return (
+                <button
+                  key={index}
+                  onClick={() => {
+                    onGoToSlide(index + 1);
+                    onClose();
+                  }}
+                  className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                    currentSlide === index + 1
+                      ? "bg-primary text-white"
+                      : "hover:bg-gray-100 text-gray-700"
                   }`}
                 >
-                  {section.heading}
-                </div>
-              </button>
-            ))}
+                  <div
+                    className={`${
+                      section.level === 2
+                        ? "font-semibold"
+                        : section.level === 3
+                        ? "ml-2"
+                        : "ml-4 text-sm"
+                    }`}
+                  >
+                    {section.heading}
+                    {showCounter && (
+                      <span className="ml-2 text-xs opacity-70">
+                        {currentIndex}/{totalCount}
+                      </span>
+                    )}
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </motion.div>
       )}

@@ -81,14 +81,19 @@ const Presentation = () => {
       return;
     }
 
+    // Quand on déverrouille, afficher les contrôles puis démarrer le timer
+    setShowControls(true);
     const timeout = window.setTimeout(() => {
       setShowControls(false);
     }, 3000);
+    setHideControlsTimeout(timeout);
 
     return () => {
       clearTimeout(timeout);
+      setHideControlsTimeout(null);
     };
-  }, [isControlsLocked, hideControlsTimeout]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isControlsLocked]);
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent) => {
@@ -102,21 +107,27 @@ const Presentation = () => {
         return;
       }
 
-      const showThreshold = 180;
-      const isNearTop = e.clientY < showThreshold;
-      const isNearBottom = e.clientY > window.innerHeight - showThreshold;
+      const showThresholdTop = 96;
+      const isNearTop = e.clientY < showThresholdTop;
+      const showThresholdLeft = 180;
+      const isNearLeft = e.clientX < showThresholdLeft;
 
-      if (isNearTop || isNearBottom) {
-        setShowControls(true);
-        if (hideControlsTimeout) {
-          clearTimeout(hideControlsTimeout);
+      if (isNearTop || isNearLeft) {
+        if (!showControls) {
+          setShowControls(true);
         }
-        const timeout = window.setTimeout(() => {
+        // Ne créer un nouveau timeout que s'il n'y en a pas déjà un
+        if (!hideControlsTimeout) {
+          const timeout = window.setTimeout(() => {
+            setShowControls(false);
+            setHideControlsTimeout(null);
+          }, 3000);
+          setHideControlsTimeout(timeout);
+        }
+      } else {
+        if (showControls) {
           setShowControls(false);
-        }, 3000);
-        setHideControlsTimeout(timeout);
-      } else if (showControls) {
-        setShowControls(false);
+        }
         if (hideControlsTimeout) {
           clearTimeout(hideControlsTimeout);
           setHideControlsTimeout(null);

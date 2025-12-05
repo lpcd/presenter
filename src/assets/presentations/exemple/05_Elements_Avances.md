@@ -79,7 +79,7 @@ function updateUser(user, updates) {
 }
 ```
 
-### 📊 En plusieurs pages
+## En plusieurs pages
 
 **Contexte** : Création d'un système d'authentification
 
@@ -92,7 +92,7 @@ function updateUser(user, updates) {
 - Database : PostgreSQL
 - Auth : JWT + bcrypt
 
-### 📊 En plusieurs pages
+## En plusieurs pages
 
 **Étapes d'implémentation**
 
@@ -123,7 +123,7 @@ function updateUser(user, updates) {
    }
    ```
 
-### 📊 En plusieurs pages
+## En plusieurs pages
 
 3. **Intégration frontend**
    - [x] Formulaire de login

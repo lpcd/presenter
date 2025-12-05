@@ -158,22 +158,24 @@ export const PresentationMode = ({
         </div>
       </main>
 
-      {/* Barre de navigation verticale à gauche - toujours visible */}
-      <SlideNavigation
-        currentSlide={currentSlide}
-        totalSlides={totalSlides}
-        onPrevious={goToPreviousSlide}
-        onNext={goToNextSlide}
-        onGoToSlide={onSlideChange}
-        sections={content.sections}
-        presentationId={presentationId}
-        allModules={allModules}
-        currentModuleIndex={currentModuleIndex}
-        isControlsLocked={isControlsLocked}
-        onToggleControlsLock={onToggleControlsLock}
-      />
+      {/* Barre de navigation verticale à gauche */}
+      {showControls && (
+        <SlideNavigation
+          currentSlide={currentSlide}
+          totalSlides={totalSlides}
+          onPrevious={goToPreviousSlide}
+          onNext={goToNextSlide}
+          onGoToSlide={onSlideChange}
+          sections={content.sections}
+          presentationId={presentationId}
+          allModules={allModules}
+          currentModuleIndex={currentModuleIndex}
+          isControlsLocked={isControlsLocked}
+          onToggleControlsLock={onToggleControlsLock}
+        />
+      )}
 
-      {/* SlideCounter en bas à droite */}
+      {/* SlideCounter en bas à droite - toujours visible */}
       <SlideCounter
         currentSlide={currentSlide}
         totalSlides={totalSlides}

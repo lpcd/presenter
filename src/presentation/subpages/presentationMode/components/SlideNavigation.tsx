@@ -58,38 +58,32 @@ export const SlideNavigation = ({
   );
 
   const handleModulesMenuToggle = () => {
-    // Fermer les menus si les contrôles ne sont pas verrouillés
-    if (!isControlsLocked && showModulesMenu) {
-      setShowModulesMenu(false);
-      return;
+    const newState = !showModulesMenu;
+
+    // Si on ouvre le menu et que les contrôles ne sont pas verrouillés, verrouiller d'abord
+    if (newState && !isControlsLocked && onToggleControlsLock) {
+      onToggleControlsLock();
     }
 
-    const newState = !showModulesMenu;
     setShowModulesMenu(newState);
     // Fermer la table des matières si on ouvre les modules
     if (newState && showTableOfContents) {
       setShowTableOfContents(false);
     }
-    if (newState && !isControlsLocked && onToggleControlsLock) {
-      onToggleControlsLock();
-    }
   };
 
   const handleTableOfContentsToggle = () => {
-    // Fermer les menus si les contrôles ne sont pas verrouillés
-    if (!isControlsLocked && showTableOfContents) {
-      setShowTableOfContents(false);
-      return;
+    const newState = !showTableOfContents;
+
+    // Si on ouvre la table des matières et que les contrôles ne sont pas verrouillés, verrouiller d'abord
+    if (newState && !isControlsLocked && onToggleControlsLock) {
+      onToggleControlsLock();
     }
 
-    const newState = !showTableOfContents;
     setShowTableOfContents(newState);
     // Fermer le menu des modules si on ouvre la table des matières
     if (newState && showModulesMenu) {
       setShowModulesMenu(false);
-    }
-    if (newState && !isControlsLocked && onToggleControlsLock) {
-      onToggleControlsLock();
     }
   };
 
