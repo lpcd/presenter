@@ -10,21 +10,16 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { ViewMode } from "../types";
-import { useState, useRef, useEffect } from "react";
 
 interface HeaderProps {
   presentationId: string | undefined;
   title: string;
-  currentSlide: number;
-  totalSlides: number;
   viewMode: ViewMode;
   onViewModeChange: (mode: ViewMode) => void;
   moduleTitle?: string;
   presentationName?: string;
   isFullscreen: boolean;
   onToggleFullscreen: () => void;
-  onSlideChange?: (slide: number) => void;
-  onEditingChange?: (isEditing: boolean) => void;
   isControlsLocked?: boolean;
   onToggleControlsLock?: () => void;
 }
@@ -32,66 +27,16 @@ interface HeaderProps {
 export const Header = ({
   presentationId,
   title,
-  currentSlide,
-  totalSlides,
   viewMode,
   onViewModeChange,
   moduleTitle,
   presentationName,
   isFullscreen,
   onToggleFullscreen,
-  onSlideChange,
-  onEditingChange,
   isControlsLocked = false,
   onToggleControlsLock,
 }: HeaderProps) => {
   const navigate = useNavigate();
-  const [isEditing, setIsEditing] = useState(false);
-  const [inputValue, setInputValue] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (isEditing && inputRef.current) {
-      inputRef.current.focus();
-      inputRef.current.select();
-    }
-  }, [isEditing]);
-
-  const handleSlideNumberClick = () => {
-    if (viewMode === "presentation" && onSlideChange) {
-      setInputValue(String(currentSlide + 1));
-      setIsEditing(true);
-      onEditingChange?.(true);
-      // Verrouiller la barre si elle est déverrouillée
-      if (!isControlsLocked && onToggleControlsLock) {
-        onToggleControlsLock();
-      }
-    }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setInputValue(value);
-  };
-
-  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      const slideNumber = parseInt(inputValue);
-      if (slideNumber >= 1 && slideNumber <= totalSlides && onSlideChange) {
-        onSlideChange(slideNumber - 1);
-      }
-      setIsEditing(false);
-      onEditingChange?.(false);
-    } else if (e.key === "Escape") {
-      setIsEditing(false);
-      onEditingChange?.(false);
-    }
-  };
-
-  const handleInputBlur = () => {
-    setIsEditing(false);
-    onEditingChange?.(false);
-  };
 
   return (
     <motion.header
@@ -153,40 +98,6 @@ export const Header = ({
             </motion.button>
           </div>
 
-          {/* Compteur de slides (uniquement en mode présentation) */}
-          {viewMode === "presentation" && (
-            <div
-              className="text-white/60 text-sm font-medium px-4 py-2.5 bg-white/5 rounded-lg whitespace-nowrap cursor-pointer hover:bg-white/10 transition-colors inline-flex items-center h-[42px]"
-              onClick={handleSlideNumberClick}
-              title="Cliquez pour aller à une slide spécifique"
-              style={{ minWidth: "6rem" }}
-            >
-              {isEditing ? (
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={inputValue}
-                  onChange={handleInputChange}
-                  onKeyDown={handleInputKeyDown}
-                  onBlur={handleInputBlur}
-                  className="w-12 bg-white text-primary text-center rounded px-1 outline-none"
-                  placeholder={String(currentSlide + 1)}
-                  style={{ minWidth: "3rem", width: "3rem" }}
-                />
-              ) : (
-                <span
-                  style={{
-                    minWidth: "1.5rem",
-                    display: "inline-block",
-                    textAlign: "center",
-                  }}
-                >
-                  {currentSlide + 1}
-                </span>
-              )}{" "}
-              / {totalSlides}
-            </div>
-          )}
           {/* Bouton verrouillage contrôles (uniquement en mode présentation) */}
           {viewMode === "presentation" && onToggleControlsLock && (
             <motion.button

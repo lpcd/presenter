@@ -2,6 +2,7 @@ import { useMemo, useCallback, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { SlideContent } from "./SlideContent";
 import { SlideNavigation } from "./SlideNavigation";
+import { SlideCounter } from "./SlideCounter";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { ParsedContent } from "../types";
@@ -26,6 +27,7 @@ interface PresentationModeProps {
   currentModuleIndex: number;
   isControlsLocked?: boolean;
   onToggleControlsLock?: () => void;
+  onEditingChange?: (isEditing: boolean) => void;
 }
 
 export const PresentationMode = ({
@@ -41,6 +43,7 @@ export const PresentationMode = ({
   currentModuleIndex,
   isControlsLocked = false,
   onToggleControlsLock,
+  onEditingChange,
 }: PresentationModeProps) => {
   const navigate = useNavigate();
   const mainRef = useRef<HTMLElement>(null);
@@ -155,28 +158,30 @@ export const PresentationMode = ({
         </div>
       </main>
 
-      <div
-        className={`fixed bottom-0 left-0 right-0 transition-all duration-300 ${
-          !showControls
-            ? "translate-y-full opacity-0 pointer-events-none"
-            : "translate-y-0 opacity-100"
-        }`}
-        style={{ zIndex: 50 }}
-      >
-        <SlideNavigation
-          currentSlide={currentSlide}
-          totalSlides={totalSlides}
-          onPrevious={goToPreviousSlide}
-          onNext={goToNextSlide}
-          onGoToSlide={onSlideChange}
-          sections={content.sections}
-          presentationId={presentationId}
-          allModules={allModules}
-          currentModuleIndex={currentModuleIndex}
-          isControlsLocked={isControlsLocked}
-          onToggleControlsLock={onToggleControlsLock}
-        />
-      </div>
+      {/* Barre de navigation verticale à gauche - toujours visible */}
+      <SlideNavigation
+        currentSlide={currentSlide}
+        totalSlides={totalSlides}
+        onPrevious={goToPreviousSlide}
+        onNext={goToNextSlide}
+        onGoToSlide={onSlideChange}
+        sections={content.sections}
+        presentationId={presentationId}
+        allModules={allModules}
+        currentModuleIndex={currentModuleIndex}
+        isControlsLocked={isControlsLocked}
+        onToggleControlsLock={onToggleControlsLock}
+      />
+
+      {/* SlideCounter en bas à droite */}
+      <SlideCounter
+        currentSlide={currentSlide}
+        totalSlides={totalSlides}
+        onSlideChange={onSlideChange}
+        onEditingChange={onEditingChange}
+        isControlsLocked={isControlsLocked}
+        onToggleControlsLock={onToggleControlsLock}
+      />
     </>
   );
 };

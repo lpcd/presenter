@@ -267,16 +267,12 @@ const Presentation = () => {
         <Header
           presentationId={presentationId}
           title={content.title}
-          currentSlide={currentSlide}
-          totalSlides={content.sections.length + (nextModule ? 1 : 0) + 1}
           viewMode="presentation"
           onViewModeChange={handleViewModeChange}
           moduleTitle={moduleTitle}
           presentationName={presentationName}
           isFullscreen={isFullscreen}
           onToggleFullscreen={toggleFullscreen}
-          onSlideChange={setCurrentSlide}
-          onEditingChange={setIsEditingSlideNumber}
           isControlsLocked={isControlsLocked}
           onToggleControlsLock={() => setIsControlsLocked(!isControlsLocked)}
         />
@@ -295,6 +291,7 @@ const Presentation = () => {
         currentModuleIndex={currentModuleIndex}
         isControlsLocked={isControlsLocked}
         onToggleControlsLock={() => setIsControlsLocked(!isControlsLocked)}
+        onEditingChange={setIsEditingSlideNumber}
       />
     </div>
   );
