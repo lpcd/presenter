@@ -28,6 +28,7 @@ interface PresentationModeProps {
   isControlsLocked?: boolean;
   onToggleControlsLock?: () => void;
   onEditingChange?: (isEditing: boolean) => void;
+  presentationName?: string;
 }
 
 export const PresentationMode = ({
@@ -44,6 +45,7 @@ export const PresentationMode = ({
   isControlsLocked = false,
   onToggleControlsLock,
   onEditingChange,
+  presentationName,
 }: PresentationModeProps) => {
   const navigate = useNavigate();
   const mainRef = useRef<HTMLElement>(null);
@@ -94,7 +96,7 @@ export const PresentationMode = ({
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.3 }}
-                className="bg-gradient-to-br from-primary to-blue-600 text-white rounded-2xl shadow-2xl p-12 w-full h-[600px] flex flex-col items-center justify-center text-center overflow-hidden"
+                className="slide-content-container bg-gradient-to-br from-primary to-blue-600 text-white rounded-2xl shadow-2xl p-12 w-full h-[600px] flex flex-col items-center justify-center text-center overflow-hidden"
               >
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -114,7 +116,7 @@ export const PresentationMode = ({
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.3 }}
-                className="bg-gradient-to-br from-primary to-blue-600 text-white rounded-2xl shadow-2xl p-12 w-full h-[600px] flex flex-col items-center justify-center text-center overflow-hidden"
+                className="slide-content-container bg-gradient-to-br from-primary to-blue-600 text-white rounded-2xl shadow-2xl p-12 w-full h-[600px] flex flex-col items-center justify-center text-center overflow-hidden"
               >
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -172,6 +174,8 @@ export const PresentationMode = ({
           currentModuleIndex={currentModuleIndex}
           isControlsLocked={isControlsLocked}
           onToggleControlsLock={onToggleControlsLock}
+          presentationName={presentationName}
+          moduleTitle={moduleTitle}
         />
       )}
 

@@ -133,7 +133,7 @@ export const SupportMode = ({
           </h1>
         </motion.div>
 
-        <div className="bg-white rounded-2xl shadow-2xl p-8 sm:p-12 space-y-12 overflow-x-hidden">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 sm:p-12 space-y-12 overflow-x-hidden support-content">
           {filteredSections.map((section, index) => (
             <motion.article
               key={index}

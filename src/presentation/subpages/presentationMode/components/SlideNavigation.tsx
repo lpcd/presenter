@@ -1,9 +1,10 @@
 import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import { ChevronUp, ChevronDown, Menu, List } from "lucide-react";
+import { ChevronUp, ChevronDown, Menu, List, Download } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ModulesMenu } from "./ModulesMenu";
 import { TableOfContents } from "./TableOfContents";
+import { exportSlidesPDF } from "../utils/pdfExport";
 
 interface SlideNavigationProps {
   currentSlide: number;
@@ -28,6 +29,8 @@ interface SlideNavigationProps {
   currentModuleIndex: number;
   isControlsLocked?: boolean;
   onToggleControlsLock?: () => void;
+  presentationName?: string;
+  moduleTitle?: string;
 }
 
 export const SlideNavigation = ({
@@ -42,9 +45,12 @@ export const SlideNavigation = ({
   currentModuleIndex,
   isControlsLocked = false,
   onToggleControlsLock,
+  presentationName = "Presentation",
+  moduleTitle = "Module",
 }: SlideNavigationProps) => {
   const [showModulesMenu, setShowModulesMenu] = useState(false);
   const [showTableOfContents, setShowTableOfContents] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
   const navigate = useNavigate();
 
   const navigateToModule = useCallback(
@@ -84,6 +90,25 @@ export const SlideNavigation = ({
     // Fermer le menu des modules si on ouvre la table des matières
     if (newState && showModulesMenu) {
       setShowModulesMenu(false);
+    }
+  };
+
+  const handleExportPDF = async () => {
+    setIsExporting(true);
+    try {
+      await exportSlidesPDF(
+        presentationName,
+        moduleTitle,
+        totalSlides,
+        onGoToSlide
+      );
+    } catch (error) {
+      console.error("Erreur lors de l'export PDF:", error);
+      alert("Erreur lors de l'export PDF. Veuillez réessayer.");
+    } finally {
+      setIsExporting(false);
+      // Revenir à la slide actuelle
+      onGoToSlide(currentSlide);
     }
   };
 
@@ -158,6 +183,26 @@ export const SlideNavigation = ({
           title="Slide suivante"
         >
           <ChevronDown size={24} />
+        </motion.button>
+
+        {/* Séparateur */}
+        <div className="w-8 h-px bg-white/20 my-2"></div>
+
+        {/* Bouton Export PDF */}
+        <motion.button
+          onClick={handleExportPDF}
+          disabled={isExporting}
+          whileHover={{ scale: isExporting ? 1 : 1.1 }}
+          whileTap={{ scale: isExporting ? 1 : 0.9 }}
+          className={`p-3 rounded-xl font-semibold transition-all ${
+            isExporting
+              ? "bg-white/10 text-white/40 cursor-wait"
+              : "bg-primary text-white hover:bg-primary/90 shadow-lg"
+          }`}
+          aria-label="Exporter en PDF"
+          title="Exporter les diapositives en PDF"
+        >
+          <Download size={24} />
         </motion.button>
       </div>
 

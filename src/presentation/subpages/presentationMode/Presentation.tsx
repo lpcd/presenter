@@ -149,6 +149,7 @@ const Presentation = () => {
     const loadMarkdown = async () => {
       setLoading(true);
       setError(null);
+      setCurrentSlide(0); // Réinitialiser à la première slide lors du changement de module
 
       try {
         const mdFilename = filename || "00_Plan";
@@ -303,6 +304,7 @@ const Presentation = () => {
         isControlsLocked={isControlsLocked}
         onToggleControlsLock={() => setIsControlsLocked(!isControlsLocked)}
         onEditingChange={setIsEditingSlideNumber}
+        presentationName={presentationName}
       />
     </div>
   );

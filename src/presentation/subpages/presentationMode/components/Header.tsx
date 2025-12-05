@@ -7,9 +7,11 @@ import {
   Minimize,
   Lock,
   Unlock,
+  Download,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { ViewMode } from "../types";
+import { useState } from "react";
 
 interface HeaderProps {
   presentationId: string | undefined;
@@ -22,6 +24,7 @@ interface HeaderProps {
   onToggleFullscreen: () => void;
   isControlsLocked?: boolean;
   onToggleControlsLock?: () => void;
+  onExportPDF?: () => Promise<void>;
 }
 
 export const Header = ({
@@ -35,8 +38,23 @@ export const Header = ({
   onToggleFullscreen,
   isControlsLocked = false,
   onToggleControlsLock,
+  onExportPDF,
 }: HeaderProps) => {
   const navigate = useNavigate();
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handleExportPDF = async () => {
+    if (!onExportPDF) return;
+    setIsExporting(true);
+    try {
+      await onExportPDF();
+    } catch (error) {
+      console.error("Erreur lors de l'export PDF:", error);
+      alert("Erreur lors de l'export PDF. Veuillez réessayer.");
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   return (
     <motion.header
@@ -132,6 +150,25 @@ export const Header = ({
               }
             >
               {isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}
+            </motion.button>
+          )}
+          {viewMode === "support" && onExportPDF && (
+            <motion.button
+              onClick={handleExportPDF}
+              disabled={isExporting}
+              whileHover={{ scale: isExporting ? 1 : 1.05 }}
+              whileTap={{ scale: isExporting ? 1 : 0.95 }}
+              className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg font-semibold text-sm transition-all h-[42px] ${
+                isExporting
+                  ? "bg-white/10 text-white/40 cursor-wait"
+                  : "bg-primary text-white hover:bg-primary/90"
+              }`}
+              title="Exporter en PDF"
+            >
+              <Download size={16} />
+              <span className="hidden sm:inline">
+                {isExporting ? "Export..." : "Exporter"}
+              </span>
             </motion.button>
           )}
         </div>

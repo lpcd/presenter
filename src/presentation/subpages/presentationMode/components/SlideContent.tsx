@@ -77,7 +77,7 @@ export const SlideContent = ({
       animate={animation.animate}
       exit={animation.exit}
       transition={{ duration: 0.4, ease: "easeInOut" }}
-      className="bg-white rounded-2xl shadow-2xl p-8 sm:p-12 w-full min-h-[600px] flex flex-col"
+      className="slide-content-container bg-white rounded-2xl shadow-2xl p-8 sm:p-12 w-full min-h-[600px] flex flex-col"
     >
       <motion.h2
         initial={{ opacity: 0, y: -20 }}

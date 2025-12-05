@@ -7,6 +7,7 @@ import { ErrorState } from "../presentationMode/components/ErrorState";
 import { getPresentation } from "../../presentationLoader";
 import { Header } from "../presentationMode/components/Header";
 import { parseMarkdown } from "../presentationMode/utils/markdownParser";
+import { exportSupportPDF } from "../presentationMode/utils/pdfExport";
 
 const moduleFiles = import.meta.glob("../../../assets/presentations/**/*.md", {
   query: "?raw",
@@ -45,6 +46,10 @@ const Support = () => {
     },
     [navigate, presentationId, filename]
   );
+
+  const handleExportPDF = useCallback(async () => {
+    await exportSupportPDF(presentationName, moduleTitle);
+  }, [presentationName, moduleTitle]);
 
   useEffect(() => {
     const loadMarkdown = async () => {
@@ -130,6 +135,7 @@ const Support = () => {
         isFullscreen={false}
         onToggleFullscreen={() => {}}
         onSlideChange={() => {}}
+        onExportPDF={handleExportPDF}
       />
       <SupportMode
         content={content}
