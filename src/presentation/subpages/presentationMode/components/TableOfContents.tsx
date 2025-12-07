@@ -19,14 +19,12 @@ export const TableOfContents = ({
   currentSlide,
   onGoToSlide,
 }: TableOfContentsProps) => {
-  // Compter les occurrences de chaque titre
   const headingCounts = new Map<string, number>();
   sections.forEach((section) => {
     const count = headingCounts.get(section.heading) || 0;
     headingCounts.set(section.heading, count + 1);
   });
 
-  // Suivre l'index de chaque titre dupliqué
   const headingIndexes = new Map<string, number>();
 
   return (

@@ -33,7 +33,6 @@ export const MediaLink = ({ href, children }: MediaLinkProps) => {
     const w = width ? `${width}px` : "100%";
     const h = height ? `${height}px` : "400px";
 
-    // Construire l'URL réelle pour les ressources locales
     let actualHref = href;
     if (href.startsWith("./ressources/") || href.startsWith("ressources/")) {
       const cleanPath = href.replace(/^\.?\//, "");
@@ -42,26 +41,22 @@ export const MediaLink = ({ href, children }: MediaLinkProps) => {
       actualHref = `/presentations/${presentationId}/${cleanPath}`;
     }
 
-    // VIDEO
     if (mediaType === "VIDEO") {
       return (
         <Video src={actualHref} title={actualTitle} width={w} height={h} />
       );
     }
 
-    // AUDIO
     if (mediaType === "AUDIO") {
       return <Audio src={actualHref} title={actualTitle} width={w} />;
     }
 
-    // URL ou PDF (iframe)
     if (mediaType === "URL" || mediaType === "PDF") {
       return (
         <Iframe src={actualHref} title={actualTitle} width={w} height={h} />
       );
     }
 
-    // EMBED
     if (mediaType === "EMBED") {
       return (
         <Embed src={actualHref} title={actualTitle} width={w} height={h} />
@@ -69,6 +64,5 @@ export const MediaLink = ({ href, children }: MediaLinkProps) => {
     }
   }
 
-  // Lien normal
   return <Link href={href}>{children}</Link>;
 };

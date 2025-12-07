@@ -10,7 +10,6 @@ export const QuestionsSlide = () => {
       transition={{ duration: 0.4 }}
       className="slide-content-container bg-gradient-to-br from-purple-600 to-indigo-700 text-white rounded-2xl shadow-2xl p-12 w-full min-h-[600px] flex flex-col items-center justify-center relative overflow-hidden"
     >
-      {/* Icônes multiples en arrière-plan */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.08 }}
@@ -35,7 +34,6 @@ export const QuestionsSlide = () => {
         </div>
       </motion.div>
 
-      {/* Contenu */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}

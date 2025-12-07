@@ -42,43 +42,6 @@ durée : 0
 
 > 🔒 **Sécurité** : Ne jamais stocker de tokens d'authentification dans le localStorage sans chiffrement.
 
-## Code avec numéros de ligne
-
-```typescript:counter.ts
-1  import { useState } from 'react';
-2
-3  export const useCounter = (initialValue = 0) => {
-4    const [count, setCount] = useState(initialValue);
-5
-6    const increment = () => setCount(c => c + 1);
-7    const decrement = () => setCount(c => c - 1);
-8    const reset = () => setCount(initialValue);
-9
-10   return { count, increment, decrement, reset };
-11 };
-```
-
-## Code avec mise en évidence
-
-```javascript
-// Fonction utilitaire pour formater les dates
-function formatDate(date) {
-  const options = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-
-  return new Intl.DateTimeFormat("fr-FR", options).format(date);
-}
-
-// ATTENTION: Cette fonction modifie l'objet original
-function updateUser(user, updates) {
-  Object.assign(user, updates); // ⚠️ Mutation
-  return user;
-}
-```
-
 ## En plusieurs pages
 
 **Contexte** : Création d'un système d'authentification
@@ -181,8 +144,8 @@ description : À la fin de ce module, vous serez capable de :
 
 ## Demonstration
 
-titre : Création d'un système d'auth complet
-description : Nous allons créer ensemble un système d'authentification sécurisé avec JWT, en suivant les bonnes pratiques de sécurité.
+titre : Démonstration...
+description : Nous allons créer ensemble...
 
 ## Recapitulatif
 

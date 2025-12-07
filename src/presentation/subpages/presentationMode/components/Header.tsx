@@ -86,7 +86,6 @@ export const Header = ({
         </motion.h1>
 
         <div className="flex items-center gap-3">
-          {/* Toggle mode */}
           <div className="flex gap-2 bg-white/5 rounded-lg p-1">
             <motion.button
               onClick={() => onViewModeChange("presentation")}
@@ -116,7 +115,6 @@ export const Header = ({
             </motion.button>
           </div>
 
-          {/* Bouton verrouillage contrôles (uniquement en mode présentation) */}
           {viewMode === "presentation" && onToggleControlsLock && (
             <motion.button
               onClick={onToggleControlsLock}
@@ -136,7 +134,6 @@ export const Header = ({
               {isControlsLocked ? <Lock size={16} /> : <Unlock size={16} />}
             </motion.button>
           )}
-          {/* Bouton plein écran (uniquement en mode présentation) */}
           {viewMode === "presentation" && (
             <motion.button
               onClick={onToggleFullscreen}

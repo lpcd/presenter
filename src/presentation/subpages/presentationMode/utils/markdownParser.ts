@@ -89,12 +89,10 @@ export const parseMarkdown = (
     });
   }
 
-  // Post-traitement : détecter les titres dupliqués et ajouter les infos de compteur
   const headingCounts = new Map<string, number>();
   const headingOccurrences = new Map<string, number>();
   const headingContents = new Map<string, string[]>();
 
-  // Compter les occurrences de chaque titre et collecter les contenus
   sections.forEach((section) => {
     const count = headingCounts.get(section.heading) || 0;
     headingCounts.set(section.heading, count + 1);
@@ -104,7 +102,6 @@ export const parseMarkdown = (
     headingContents.set(section.heading, contents);
   });
 
-  // Enrichir les sections avec les informations de duplication
   const enrichedSections = sections.map((section) => {
     const totalOccurrences = headingCounts.get(section.heading) || 1;
 
@@ -113,16 +110,13 @@ export const parseMarkdown = (
         (headingOccurrences.get(section.heading) || 0) + 1;
       headingOccurrences.set(section.heading, currentOccurrence);
 
-      // Préparer le contenu fusionné pour le mode support (toutes les occurrences)
       const mergedContent = (headingContents.get(section.heading) || []).join(
         "\n\n"
       );
 
       return {
         ...section,
-        // En mode présentation, on garde le contenu original de chaque section
-        // En mode support, on utilisera mergedContent via duplicateInfo
-        mergedContent, // Contenu fusionné pour le mode support
+        mergedContent,
         duplicateInfo: {
           current: currentOccurrence,
           total: totalOccurrences,

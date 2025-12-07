@@ -72,7 +72,6 @@ const Presentation = () => {
 
   useEffect(() => {
     if (isControlsLocked) {
-      // Annuler tous les timeouts en cours et forcer l'affichage
       if (hideControlsTimeout) {
         clearTimeout(hideControlsTimeout);
         setHideControlsTimeout(null);
@@ -81,7 +80,6 @@ const Presentation = () => {
       return;
     }
 
-    // Quand on déverrouille, afficher les contrôles puis démarrer le timer
     setShowControls(true);
     const timeout = window.setTimeout(() => {
       setShowControls(false);
@@ -92,7 +90,6 @@ const Presentation = () => {
       clearTimeout(timeout);
       setHideControlsTimeout(null);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isControlsLocked]);
 
   const handleMouseMove = useCallback(
@@ -116,7 +113,6 @@ const Presentation = () => {
         if (!showControls) {
           setShowControls(true);
         }
-        // Ne créer un nouveau timeout que s'il n'y en a pas déjà un
         if (!hideControlsTimeout) {
           const timeout = window.setTimeout(() => {
             setShowControls(false);
@@ -149,7 +145,7 @@ const Presentation = () => {
     const loadMarkdown = async () => {
       setLoading(true);
       setError(null);
-      setCurrentSlide(0); // Réinitialiser à la première slide lors du changement de module
+      setCurrentSlide(0);
 
       try {
         const mdFilename = filename || "00_Plan";

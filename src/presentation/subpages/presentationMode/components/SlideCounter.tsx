@@ -34,7 +34,6 @@ export const SlideCounter = ({
       setInputValue(String(currentSlide + 1));
       setIsEditing(true);
       onEditingChange?.(true);
-      // Verrouiller la barre si elle est déverrouillée
       if (!isControlsLocked && onToggleControlsLock) {
         onToggleControlsLock();
       }

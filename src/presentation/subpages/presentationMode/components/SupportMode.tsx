@@ -39,7 +39,6 @@ export const SupportMode = ({
       (section) => !section.duplicateInfo || section.duplicateInfo.isFirst
     )
     .filter((section) => {
-      // Filtrer les slides spéciales en mode support
       const specialSlide = detectSpecialSlide(
         section.heading,
         section.content,

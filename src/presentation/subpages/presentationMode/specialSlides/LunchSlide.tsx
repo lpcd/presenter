@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
 import { Utensils } from "lucide-react";
 
-interface DejeunerSlideProps {
+interface LunchSlideProps {
   retour?: string;
 }
 
-export const DejeunerSlide = ({ retour = "14h00" }: DejeunerSlideProps) => {
+export const LunchSlide = ({ retour = "14h00" }: LunchSlideProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -14,7 +14,6 @@ export const DejeunerSlide = ({ retour = "14h00" }: DejeunerSlideProps) => {
       transition={{ duration: 0.4 }}
       className="slide-content-container bg-gradient-to-br from-emerald-500 to-teal-600 text-white rounded-2xl shadow-2xl p-12 w-full min-h-[600px] flex flex-col items-center justify-center relative overflow-hidden"
     >
-      {/* Icône en arrière-plan */}
       <motion.div
         initial={{ scale: 0, rotate: -180 }}
         animate={{ scale: 1, rotate: 0 }}
@@ -24,7 +23,6 @@ export const DejeunerSlide = ({ retour = "14h00" }: DejeunerSlideProps) => {
         <Utensils size={450} strokeWidth={1} />
       </motion.div>
 
-      {/* Contenu */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}

@@ -66,13 +66,11 @@ export const SlideNavigation = ({
   const handleModulesMenuToggle = () => {
     const newState = !showModulesMenu;
 
-    // Si on ouvre le menu et que les contrôles ne sont pas verrouillés, verrouiller d'abord
     if (newState && !isControlsLocked && onToggleControlsLock) {
       onToggleControlsLock();
     }
 
     setShowModulesMenu(newState);
-    // Fermer la table des matières si on ouvre les modules
     if (newState && showTableOfContents) {
       setShowTableOfContents(false);
     }
@@ -81,13 +79,11 @@ export const SlideNavigation = ({
   const handleTableOfContentsToggle = () => {
     const newState = !showTableOfContents;
 
-    // Si on ouvre la table des matières et que les contrôles ne sont pas verrouillés, verrouiller d'abord
     if (newState && !isControlsLocked && onToggleControlsLock) {
       onToggleControlsLock();
     }
 
     setShowTableOfContents(newState);
-    // Fermer le menu des modules si on ouvre la table des matières
     if (newState && showModulesMenu) {
       setShowModulesMenu(false);
     }
@@ -107,7 +103,6 @@ export const SlideNavigation = ({
       alert("Erreur lors de l'export PDF. Veuillez réessayer.");
     } finally {
       setIsExporting(false);
-      // Revenir à la slide actuelle
       onGoToSlide(currentSlide);
     }
   };
@@ -120,7 +115,6 @@ export const SlideNavigation = ({
       className="fixed left-0 top-24 -translate-y-1/2 bg-black/30 backdrop-blur-sm text-white py-4 px-3 rounded-r-2xl border-r border-t border-b border-white/10 z-20"
     >
       <div className="flex flex-col items-center gap-3">
-        {/* Bouton Modules */}
         <motion.button
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -134,7 +128,6 @@ export const SlideNavigation = ({
           <Menu size={24} />
         </motion.button>
 
-        {/* Bouton Sommaire */}
         <motion.button
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -148,10 +141,8 @@ export const SlideNavigation = ({
           <List size={24} />
         </motion.button>
 
-        {/* Séparateur */}
         <div className="w-8 h-px bg-white/20 my-2"></div>
 
-        {/* Bouton Slide précédente */}
         <motion.button
           onClick={onPrevious}
           disabled={currentSlide === 0}
@@ -168,7 +159,6 @@ export const SlideNavigation = ({
           <ChevronUp size={24} />
         </motion.button>
 
-        {/* Bouton Slide suivante */}
         <motion.button
           onClick={onNext}
           disabled={currentSlide === totalSlides - 1}
@@ -185,10 +175,8 @@ export const SlideNavigation = ({
           <ChevronDown size={24} />
         </motion.button>
 
-        {/* Séparateur */}
         <div className="w-8 h-px bg-white/20 my-2"></div>
 
-        {/* Bouton Export PDF */}
         <motion.button
           onClick={handleExportPDF}
           disabled={isExporting}
@@ -206,7 +194,6 @@ export const SlideNavigation = ({
         </motion.button>
       </div>
 
-      {/* Menu des modules */}
       <ModulesMenu
         show={showModulesMenu}
         onClose={() => setShowModulesMenu(false)}
@@ -215,7 +202,6 @@ export const SlideNavigation = ({
         onNavigateToModule={navigateToModule}
       />
 
-      {/* Table des matières */}
       <TableOfContents
         show={showTableOfContents}
         onClose={() => setShowTableOfContents(false)}

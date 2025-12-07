@@ -6,14 +6,14 @@ import { detectSpecialSlide } from "../utils/specialSlideDetector";
 import {
   ExerciseSlide,
   PauseSlide,
-  DejeunerSlide,
-  VraiSlide,
-  FauxSlide,
+  LunchSlide,
+  TrueSlide,
+  FalseSlide,
   QuestionsSlide,
-  AttentionSlide,
-  ObjectifsSlide,
-  DemonstrationSlide,
-  RecapitulatifSlide,
+  WarningSlide,
+  ObjectivesSlide,
+  DemoSlide,
+  SummarySlide,
 } from "../specialSlides";
 
 interface SlideContentProps {
@@ -61,14 +61,12 @@ export const SlideContent = ({
 
   const animation = slideAnimations[slideIndex % slideAnimations.length];
 
-  // Détecter si c'est une slide spéciale
   const specialSlideData = detectSpecialSlide(
     section.heading,
     section.content,
     section.level
   );
 
-  // Si c'est une slide spéciale, afficher le composant correspondant
   if (specialSlideData.type) {
     switch (specialSlideData.type) {
       case "exercice":
@@ -82,32 +80,32 @@ export const SlideContent = ({
       case "pause":
         return <PauseSlide duration={specialSlideData.duration} />;
       case "dejeuner":
-        return <DejeunerSlide retour={specialSlideData.retour} />;
+        return <LunchSlide retour={specialSlideData.retour} />;
       case "vrai":
-        return <VraiSlide description={specialSlideData.description} />;
+        return <TrueSlide description={specialSlideData.description} />;
       case "faux":
-        return <FauxSlide description={specialSlideData.description} />;
+        return <FalseSlide description={specialSlideData.description} />;
       case "questions":
         return <QuestionsSlide />;
       case "attention":
-        return <AttentionSlide description={specialSlideData.description} />;
+        return <WarningSlide description={specialSlideData.description} />;
       case "objectifs":
         return (
-          <ObjectifsSlide
+          <ObjectivesSlide
             items={specialSlideData.items}
             description={specialSlideData.description}
           />
         );
       case "demonstration":
         return (
-          <DemonstrationSlide
+          <DemoSlide
             titre={specialSlideData.titre}
             description={specialSlideData.description}
           />
         );
       case "recapitulatif":
         return (
-          <RecapitulatifSlide
+          <SummarySlide
             items={specialSlideData.items}
             description={specialSlideData.description}
           />

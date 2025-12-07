@@ -72,7 +72,6 @@ export const PresentationMode = ({
     }
   }, [currentSlide, onSlideChange]);
 
-  // Remettre le scroll en haut à chaque changement de slide
   useEffect(() => {
     if (mainRef.current) {
       mainRef.current.scrollTop = 0;
@@ -160,7 +159,6 @@ export const PresentationMode = ({
         </div>
       </main>
 
-      {/* Barre de navigation verticale à gauche */}
       {showControls && (
         <SlideNavigation
           currentSlide={currentSlide}
@@ -179,7 +177,6 @@ export const PresentationMode = ({
         />
       )}
 
-      {/* SlideCounter en bas à droite - toujours visible */}
       <SlideCounter
         currentSlide={currentSlide}
         totalSlides={totalSlides}

@@ -6,7 +6,6 @@ interface ImageProps {
 export const Image = ({ src, alt }: ImageProps) => {
   if (!src) return null;
 
-  // Si l'image est un PDF
   if (src.endsWith(".pdf")) {
     return (
       <div className="my-4 w-full">
@@ -19,7 +18,6 @@ export const Image = ({ src, alt }: ImageProps) => {
     );
   }
 
-  // Parser les dimensions depuis alt (ex: "Titre 800x600")
   const match = alt?.match(
     /^(.+?)\s+(\d+)(?:x(\d+))?(?:\s+(VIDEO|AUDIO|URL|PDF|EMBED))?$/i
   );
@@ -31,12 +29,11 @@ export const Image = ({ src, alt }: ImageProps) => {
 
   if (match) {
     actualAlt = match[1];
-    captionText = match[1]; // Titre sans dimensions ni code
+    captionText = match[1];
     width = match[2] + "px";
     height = match[3] ? match[3] + "px" : "auto";
   }
 
-  // Construire l'URL réelle pour les ressources locales
   let actualSrc = src;
   if (src.startsWith("./ressources/") || src.startsWith("ressources/")) {
     const cleanPath = src.replace(/^\.?\//, "");

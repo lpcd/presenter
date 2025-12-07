@@ -21,23 +21,17 @@ export interface SpecialSlideData {
   items?: string[];
 }
 
-/**
- * Détecte si une section est une slide spéciale et extrait ses données
- * Ces slides sont identifiées par leur titre (h2-h6, pas h1)
- */
 export const detectSpecialSlide = (
   heading: string,
   content: string,
   level: number
 ): SpecialSlideData => {
-  // Ignorer les h1
   if (level === 1) {
     return { type: null };
   }
 
   const normalizedHeading = heading.toLowerCase().trim();
 
-  // Exercice
   if (normalizedHeading === "exercice") {
     return {
       type: "exercice",
@@ -45,7 +39,6 @@ export const detectSpecialSlide = (
     };
   }
 
-  // Pause
   if (normalizedHeading === "pause") {
     return {
       type: "pause",
@@ -53,7 +46,6 @@ export const detectSpecialSlide = (
     };
   }
 
-  // Déjeuner
   if (normalizedHeading === "dejeuner" || normalizedHeading === "déjeuner") {
     return {
       type: "dejeuner",
@@ -61,7 +53,6 @@ export const detectSpecialSlide = (
     };
   }
 
-  // Vrai
   if (normalizedHeading === "vrai") {
     return {
       type: "vrai",
@@ -69,7 +60,6 @@ export const detectSpecialSlide = (
     };
   }
 
-  // Faux
   if (normalizedHeading === "faux") {
     return {
       type: "faux",
@@ -77,14 +67,12 @@ export const detectSpecialSlide = (
     };
   }
 
-  // Questions
   if (normalizedHeading === "questions" || normalizedHeading === "question") {
     return {
       type: "questions",
     };
   }
 
-  // Attention
   if (
     normalizedHeading === "attention" ||
     normalizedHeading === "avertissement"
@@ -95,7 +83,6 @@ export const detectSpecialSlide = (
     };
   }
 
-  // Objectifs
   if (normalizedHeading === "objectifs" || normalizedHeading === "objectif") {
     return {
       type: "objectifs",
@@ -103,7 +90,6 @@ export const detectSpecialSlide = (
     };
   }
 
-  // Démonstration
   if (
     normalizedHeading === "demonstration" ||
     normalizedHeading === "démonstration" ||
@@ -117,7 +103,6 @@ export const detectSpecialSlide = (
     };
   }
 
-  // Récapitulatif
   if (
     normalizedHeading === "recapitulatif" ||
     normalizedHeading === "récapitulatif" ||
@@ -135,26 +120,19 @@ export const detectSpecialSlide = (
   return { type: null };
 };
 
-/**
- * Parse le contenu d'une slide Exercice
- * Recherche : durée, repos, description
- */
 const parseExerciceContent = (content: string): Partial<SpecialSlideData> => {
   const result: Partial<SpecialSlideData> = {};
 
-  // Rechercher la durée
   const durationMatch = content.match(/durée\s*:?\s*([^\n]+)/i);
   if (durationMatch) {
     result.duration = durationMatch[1].trim();
   }
 
-  // Rechercher le repos (URL)
   const reposMatch = content.match(/repos\s*:?\s*([^\n]+)/i);
   if (reposMatch) {
     result.repos = reposMatch[1].trim();
   }
 
-  // Rechercher la description
   const descriptionMatch = content.match(/description\s*:?\s*([^\n]+)/i);
   if (descriptionMatch) {
     result.description = descriptionMatch[1].trim();
@@ -163,14 +141,9 @@ const parseExerciceContent = (content: string): Partial<SpecialSlideData> => {
   return result;
 };
 
-/**
- * Parse le contenu d'une slide Pause
- * Recherche : durée
- */
 const parsePauseContent = (content: string): Partial<SpecialSlideData> => {
   const result: Partial<SpecialSlideData> = {};
 
-  // Rechercher la durée
   const durationMatch = content.match(/durée\s*:?\s*([^\n]+)/i);
   if (durationMatch) {
     result.duration = durationMatch[1].trim();
@@ -179,14 +152,9 @@ const parsePauseContent = (content: string): Partial<SpecialSlideData> => {
   return result;
 };
 
-/**
- * Parse le contenu d'une slide Déjeuner
- * Recherche : retour
- */
 const parseDejeunerContent = (content: string): Partial<SpecialSlideData> => {
   const result: Partial<SpecialSlideData> = {};
 
-  // Rechercher l'heure de retour
   const retourMatch = content.match(/retour\s*:?\s*([^\n]+)/i);
   if (retourMatch) {
     result.retour = retourMatch[1].trim();
@@ -195,14 +163,9 @@ const parseDejeunerContent = (content: string): Partial<SpecialSlideData> => {
   return result;
 };
 
-/**
- * Parse le contenu d'une slide Vrai/Faux
- * Recherche : description
- */
 const parseVraiFauxContent = (content: string): Partial<SpecialSlideData> => {
   const result: Partial<SpecialSlideData> = {};
 
-  // Rechercher la description
   const descriptionMatch = content.match(/description\s*:?\s*([^\n]+)/i);
   if (descriptionMatch) {
     result.description = descriptionMatch[1].trim();
@@ -211,16 +174,11 @@ const parseVraiFauxContent = (content: string): Partial<SpecialSlideData> => {
   return result;
 };
 
-/**
- * Parse le contenu générique avec description
- * Recherche : description
- */
 const parseDescriptionContent = (
   content: string
 ): Partial<SpecialSlideData> => {
   const result: Partial<SpecialSlideData> = {};
 
-  // Rechercher la description
   const descriptionMatch = content.match(/description\s*:?\s*([^\n]+)/i);
   if (descriptionMatch) {
     result.description = descriptionMatch[1].trim();
@@ -229,20 +187,14 @@ const parseDescriptionContent = (
   return result;
 };
 
-/**
- * Parse le contenu d'une slide Objectifs
- * Recherche : description et liste d'items
- */
 const parseObjectifsContent = (content: string): Partial<SpecialSlideData> => {
   const result: Partial<SpecialSlideData> = {};
 
-  // Rechercher la description
   const descriptionMatch = content.match(/description\s*:?\s*([^\n]+)/i);
   if (descriptionMatch) {
     result.description = descriptionMatch[1].trim();
   }
 
-  // Rechercher les items (lignes commençant par - ou *)
   const itemMatches = content.match(/^[\s]*[-*]\s*(.+)$/gm);
   if (itemMatches && itemMatches.length > 0) {
     result.items = itemMatches.map((item) =>
@@ -253,22 +205,16 @@ const parseObjectifsContent = (content: string): Partial<SpecialSlideData> => {
   return result;
 };
 
-/**
- * Parse le contenu d'une slide Démonstration
- * Recherche : titre et description
- */
 const parseDemonstrationContent = (
   content: string
 ): Partial<SpecialSlideData> => {
   const result: Partial<SpecialSlideData> = {};
 
-  // Rechercher le titre
   const titreMatch = content.match(/titre\s*:?\s*([^\n]+)/i);
   if (titreMatch) {
     result.titre = titreMatch[1].trim();
   }
 
-  // Rechercher la description
   const descriptionMatch = content.match(/description\s*:?\s*([^\n]+)/i);
   if (descriptionMatch) {
     result.description = descriptionMatch[1].trim();
@@ -277,22 +223,16 @@ const parseDemonstrationContent = (
   return result;
 };
 
-/**
- * Parse le contenu d'une slide Récapitulatif
- * Recherche : description et liste d'items
- */
 const parseRecapitulatifContent = (
   content: string
 ): Partial<SpecialSlideData> => {
   const result: Partial<SpecialSlideData> = {};
 
-  // Rechercher la description
   const descriptionMatch = content.match(/description\s*:?\s*([^\n]+)/i);
   if (descriptionMatch) {
     result.description = descriptionMatch[1].trim();
   }
 
-  // Rechercher les items (lignes commençant par - ou *)
   const itemMatches = content.match(/^[\s]*[-*]\s*(.+)$/gm);
   if (itemMatches && itemMatches.length > 0) {
     result.items = itemMatches.map((item) =>

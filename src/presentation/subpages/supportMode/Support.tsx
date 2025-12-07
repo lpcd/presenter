@@ -8,6 +8,7 @@ import { getPresentation } from "../../presentationLoader";
 import { Header } from "../presentationMode/components/Header";
 import { parseMarkdown } from "../presentationMode/utils/markdownParser";
 import { exportSupportPDF } from "../presentationMode/utils/pdfExport";
+import { NextModuleButton } from "./components";
 
 const moduleFiles = import.meta.glob("../../../assets/presentations/**/*.md", {
   query: "?raw",
@@ -126,15 +127,12 @@ const Support = () => {
       <Header
         presentationId={presentationId}
         title={content.title}
-        currentSlide={0}
-        totalSlides={content.sections.length}
         viewMode="support"
         onViewModeChange={handleViewModeChange}
         moduleTitle={moduleTitle}
         presentationName={presentationName}
         isFullscreen={false}
         onToggleFullscreen={() => {}}
-        onSlideChange={() => {}}
         onExportPDF={handleExportPDF}
       />
       <SupportMode
@@ -145,32 +143,10 @@ const Support = () => {
         currentModuleIndex={currentModuleIndex}
       />
       {nextModule && (
-        <div className="w-full flex justify-center py-8">
-          <button
-            className="inline-flex items-center gap-3 px-8 py-4 bg-white text-primary rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-shadow"
-            onClick={() => {
-              navigate(
-                `/presentations/${presentationId}/support/${nextModule.filename}`
-              );
-            }}
-          >
-            <span>Continuer : {nextModule.title}</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M17.25 6.75L21 12m0 0l-3.75 5.25M21 12H3"
-              />
-            </svg>
-          </button>
-        </div>
+        <NextModuleButton
+          presentationId={presentationId || ""}
+          module={nextModule}
+        />
       )}
     </div>
   );

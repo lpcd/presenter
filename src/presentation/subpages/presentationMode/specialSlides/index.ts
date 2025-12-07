@@ -1,10 +1,10 @@
 export { ExerciseSlide } from "./ExerciseSlide";
 export { PauseSlide } from "./PauseSlide";
-export { DejeunerSlide } from "./DejeunerSlide";
-export { VraiSlide } from "./VraiSlide";
-export { FauxSlide } from "./FauxSlide";
+export { LunchSlide } from "./LunchSlide";
+export { TrueSlide } from "./TrueSlide";
+export { FalseSlide } from "./FalseSlide";
 export { QuestionsSlide } from "./QuestionsSlide";
-export { AttentionSlide } from "./AttentionSlide";
-export { ObjectifsSlide } from "./ObjectifsSlide";
-export { DemonstrationSlide } from "./DemonstrationSlide";
-export { RecapitulatifSlide } from "./RecapitulatifSlide";
+export { WarningSlide } from "./WarningSlide";
+export { ObjectivesSlide } from "./ObjectivesSlide";
+export { DemoSlide } from "./DemoSlide";
+export { SummarySlide } from "./SummarySlide";

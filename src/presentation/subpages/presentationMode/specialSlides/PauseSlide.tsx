@@ -14,7 +14,6 @@ export const PauseSlide = ({ duration = "10 min" }: PauseSlideProps) => {
       transition={{ duration: 0.4 }}
       className="slide-content-container bg-gradient-to-br from-sky-400 to-blue-500 text-white rounded-2xl shadow-2xl p-12 w-full min-h-[600px] flex flex-col items-center justify-center relative overflow-hidden"
     >
-      {/* Icône en arrière-plan */}
       <motion.div
         initial={{ scale: 0, rotate: -180 }}
         animate={{ scale: 1, rotate: 0 }}
@@ -24,7 +23,6 @@ export const PauseSlide = ({ duration = "10 min" }: PauseSlideProps) => {
         <Coffee size={450} strokeWidth={1} />
       </motion.div>
 
-      {/* Contenu */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
