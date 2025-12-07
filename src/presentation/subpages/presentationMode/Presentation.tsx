@@ -49,6 +49,8 @@ const Presentation = () => {
     }>
   >([]);
   const [currentModuleIndex, setCurrentModuleIndex] = useState<number>(0);
+  const [showModulesMenu, setShowModulesMenu] = useState(false);
+  const [showTableOfContents, setShowTableOfContents] = useState(false);
 
   const handleViewModeChange = useCallback(
     (mode: "presentation" | "support") => {
@@ -216,9 +218,16 @@ const Presentation = () => {
         return;
       }
 
-      if (e.key === "Escape" && document.fullscreenElement) {
-        document.exitFullscreen();
-        return;
+      if (e.key === "Escape") {
+        if (showModulesMenu || showTableOfContents) {
+          setShowModulesMenu(false);
+          setShowTableOfContents(false);
+          return;
+        }
+        if (document.fullscreenElement) {
+          document.exitFullscreen();
+          return;
+        }
       }
 
       if (e.key === "F11") {
@@ -227,7 +236,59 @@ const Presentation = () => {
         return;
       }
 
+      if (e.key === "p" || e.key === "P") {
+        e.preventDefault();
+        setShowTableOfContents(!showTableOfContents);
+        if (!showTableOfContents) {
+          setShowModulesMenu(false);
+        }
+        return;
+      }
+
+      if (e.key === "m" || e.key === "M") {
+        e.preventDefault();
+        setShowModulesMenu(!showModulesMenu);
+        if (!showModulesMenu) {
+          setShowTableOfContents(false);
+        }
+        return;
+      }
+
       const totalSlides = content.sections.length + (nextModule ? 1 : 0) + 1;
+
+      if (e.key === "Home") {
+        e.preventDefault();
+        setCurrentSlide(0);
+        return;
+      }
+
+      if (e.key === "End") {
+        e.preventDefault();
+        setCurrentSlide(totalSlides - 1);
+        return;
+      }
+
+      if (e.key === "PageUp") {
+        e.preventDefault();
+        if (currentModuleIndex > 0 && presentationId) {
+          const previousModule = allModules[currentModuleIndex - 1];
+          navigate(
+            `/presentations/${presentationId}/presentation/${previousModule.filename}`
+          );
+        }
+        return;
+      }
+
+      if (e.key === "PageDown") {
+        e.preventDefault();
+        if (currentModuleIndex < allModules.length - 1 && presentationId) {
+          const nextMod = allModules[currentModuleIndex + 1];
+          navigate(
+            `/presentations/${presentationId}/presentation/${nextMod.filename}`
+          );
+        }
+        return;
+      }
 
       if (e.key === "ArrowRight" || e.key === " ") {
         e.preventDefault();
@@ -241,7 +302,19 @@ const Presentation = () => {
         }
       }
     },
-    [content, currentSlide, toggleFullscreen, nextModule, isEditingSlideNumber]
+    [
+      content,
+      currentSlide,
+      toggleFullscreen,
+      nextModule,
+      isEditingSlideNumber,
+      showModulesMenu,
+      showTableOfContents,
+      currentModuleIndex,
+      allModules,
+      presentationId,
+      navigate,
+    ]
   );
 
   if (loading) {
@@ -301,6 +374,10 @@ const Presentation = () => {
         onToggleControlsLock={() => setIsControlsLocked(!isControlsLocked)}
         onEditingChange={setIsEditingSlideNumber}
         presentationName={presentationName}
+        showModulesMenu={showModulesMenu}
+        showTableOfContents={showTableOfContents}
+        onShowModulesMenuChange={setShowModulesMenu}
+        onShowTableOfContentsChange={setShowTableOfContents}
       />
     </div>
   );

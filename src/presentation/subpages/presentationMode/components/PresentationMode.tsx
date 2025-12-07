@@ -29,6 +29,10 @@ interface PresentationModeProps {
   onToggleControlsLock?: () => void;
   onEditingChange?: (isEditing: boolean) => void;
   presentationName?: string;
+  showModulesMenu?: boolean;
+  showTableOfContents?: boolean;
+  onShowModulesMenuChange?: (show: boolean) => void;
+  onShowTableOfContentsChange?: (show: boolean) => void;
 }
 
 export const PresentationMode = ({
@@ -46,6 +50,10 @@ export const PresentationMode = ({
   onToggleControlsLock,
   onEditingChange,
   presentationName,
+  showModulesMenu = false,
+  showTableOfContents = false,
+  onShowModulesMenuChange,
+  onShowTableOfContentsChange,
 }: PresentationModeProps) => {
   const navigate = useNavigate();
   const mainRef = useRef<HTMLElement>(null);
@@ -174,6 +182,10 @@ export const PresentationMode = ({
           onToggleControlsLock={onToggleControlsLock}
           presentationName={presentationName}
           moduleTitle={moduleTitle}
+          showModulesMenu={showModulesMenu}
+          showTableOfContents={showTableOfContents}
+          onShowModulesMenuChange={onShowModulesMenuChange}
+          onShowTableOfContentsChange={onShowTableOfContentsChange}
         />
       )}
 

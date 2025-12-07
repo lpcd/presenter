@@ -31,6 +31,10 @@ interface SlideNavigationProps {
   onToggleControlsLock?: () => void;
   presentationName?: string;
   moduleTitle?: string;
+  showModulesMenu?: boolean;
+  showTableOfContents?: boolean;
+  onShowModulesMenuChange?: (show: boolean) => void;
+  onShowTableOfContentsChange?: (show: boolean) => void;
 }
 
 export const SlideNavigation = ({
@@ -47,11 +51,24 @@ export const SlideNavigation = ({
   onToggleControlsLock,
   presentationName = "Presentation",
   moduleTitle = "Module",
+  showModulesMenu: externalShowModulesMenu,
+  showTableOfContents: externalShowTableOfContents,
+  onShowModulesMenuChange,
+  onShowTableOfContentsChange,
 }: SlideNavigationProps) => {
-  const [showModulesMenu, setShowModulesMenu] = useState(false);
-  const [showTableOfContents, setShowTableOfContents] = useState(false);
+  const [internalShowModulesMenu, setInternalShowModulesMenu] = useState(false);
+  const [internalShowTableOfContents, setInternalShowTableOfContents] =
+    useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const navigate = useNavigate();
+
+  const showModulesMenu = externalShowModulesMenu ?? internalShowModulesMenu;
+  const showTableOfContents =
+    externalShowTableOfContents ?? internalShowTableOfContents;
+  const setShowModulesMenu =
+    onShowModulesMenuChange ?? setInternalShowModulesMenu;
+  const setShowTableOfContents =
+    onShowTableOfContentsChange ?? setInternalShowTableOfContents;
 
   const navigateToModule = useCallback(
     (filename: string) => {
