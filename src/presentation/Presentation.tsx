@@ -8,7 +8,7 @@ import { getPresentation, type PresentationData } from "./presentationLoader";
 const Presentation = () => {
   const { presentationId } = useParams<{ presentationId: string }>();
   const [presentation, setPresentation] = useState<PresentationData | null>(
-    null
+    null,
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -52,6 +52,7 @@ const Presentation = () => {
       duration: module.duration,
       topics: module.topics,
       moduleText: module.moduleText,
+      optional: module.optional,
     }));
   }, [presentation]);
 

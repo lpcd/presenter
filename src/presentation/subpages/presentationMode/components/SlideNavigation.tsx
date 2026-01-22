@@ -25,6 +25,7 @@ interface SlideNavigationProps {
     filename: string;
     duration: string;
     topics: string[];
+    optional?: boolean;
   }>;
   currentModuleIndex: number;
   isControlsLocked?: boolean;
@@ -77,7 +78,7 @@ export const SlideNavigation = ({
         setShowModulesMenu(false);
       }
     },
-    [presentationId, navigate]
+    [presentationId, navigate],
   );
 
   const handleModulesMenuToggle = () => {
@@ -113,7 +114,7 @@ export const SlideNavigation = ({
         presentationName,
         moduleTitle,
         totalSlides,
-        onGoToSlide
+        onGoToSlide,
       );
     } catch (error) {
       console.error("Erreur lors de l'export PDF:", error);

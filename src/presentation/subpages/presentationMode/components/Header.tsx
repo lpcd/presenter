@@ -25,6 +25,7 @@ interface HeaderProps {
   isControlsLocked?: boolean;
   onToggleControlsLock?: () => void;
   onExportPDF?: () => Promise<void>;
+  isModuleOptional?: boolean;
 }
 
 export const Header = ({
@@ -39,6 +40,7 @@ export const Header = ({
   isControlsLocked = false,
   onToggleControlsLock,
   onExportPDF,
+  isModuleOptional = false,
 }: HeaderProps) => {
   const navigate = useNavigate();
   const [isExporting, setIsExporting] = useState(false);
@@ -83,6 +85,9 @@ export const Header = ({
           {viewMode === "presentation"
             ? presentationName || title
             : moduleTitle || title}
+          {viewMode === "support" && isModuleOptional && (
+            <span className="text-sm ml-2 opacity-75">(Facultatif)</span>
+          )}
         </motion.h1>
 
         <div className="flex items-center gap-3">

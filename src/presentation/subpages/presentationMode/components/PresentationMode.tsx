@@ -12,7 +12,12 @@ interface PresentationModeProps {
   currentSlide: number;
   onSlideChange: (slide: number) => void;
   onKeyDown: (e: React.KeyboardEvent) => void;
-  nextModule: { id: number; title: string; filename: string } | null;
+  nextModule: {
+    id: number;
+    title: string;
+    filename: string;
+    optional?: boolean;
+  } | null;
   presentationId: string | undefined;
   moduleTitle: string;
   showControls: boolean;
@@ -23,6 +28,7 @@ interface PresentationModeProps {
     filename: string;
     duration: string;
     topics: string[];
+    optional?: boolean;
   }>;
   currentModuleIndex: number;
   isControlsLocked?: boolean;
@@ -33,6 +39,7 @@ interface PresentationModeProps {
   showTableOfContents?: boolean;
   onShowModulesMenuChange?: (show: boolean) => void;
   onShowTableOfContentsChange?: (show: boolean) => void;
+  isModuleOptional?: boolean;
 }
 
 export const PresentationMode = ({
@@ -54,18 +61,36 @@ export const PresentationMode = ({
   showTableOfContents = false,
   onShowModulesMenuChange,
   onShowTableOfContentsChange,
+  isModuleOptional = false,
 }: PresentationModeProps) => {
   const navigate = useNavigate();
   const mainRef = useRef<HTMLElement>(null);
 
   const totalSlides = useMemo(
     () => content.sections.length + (nextModule ? 1 : 0) + 1,
-    [content.sections.length, nextModule]
+    [content.sections.length, nextModule],
   );
+
+  const nextNonOptionalModule = useMemo(() => {
+    if (!nextModule?.optional) return null;
+
+    const currentIdx = allModules.findIndex(
+      (m) => m.filename === nextModule.filename,
+    );
+    if (currentIdx === -1) return null;
+
+    for (let i = currentIdx + 1; i < allModules.length; i++) {
+      if (!allModules[i].optional) {
+        return allModules[i];
+      }
+    }
+    return null;
+  }, [nextModule, allModules]);
+
   const isLastSlide = currentSlide === content.sections.length + 1;
   const currentSection = useMemo(
     () => content.sections[currentSlide - 1],
-    [content.sections, currentSlide]
+    [content.sections, currentSlide],
   );
 
   const goToNextSlide = useCallback(() => {
@@ -113,6 +138,11 @@ export const PresentationMode = ({
                 >
                   <h2 className="text-5xl sm:text-6xl font-bold mb-8">
                     {moduleTitle}
+                    {isModuleOptional && (
+                      <span className="text-3xl sm:text-4xl block mt-4 opacity-80">
+                        (Facultatif)
+                      </span>
+                    )}
                   </h2>
                 </motion.div>
               </motion.div>
@@ -129,30 +159,76 @@ export const PresentationMode = ({
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
+                  className="w-full max-w-2xl"
                 >
-                  <h2 className="text-4xl sm:text-5xl font-bold mb-6">
+                  <h2 className="text-4xl sm:text-5xl font-bold mb-8">
                     Module terminé ! 🎉
                   </h2>
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8">
-                    <p className="text-sm opacity-75 mb-2">Prochain module</p>
-                    <h3 className="text-2xl font-bold mb-2">
-                      {nextModule.title}
-                    </h3>
-                  </div>
-                  <motion.button
-                    onClick={() => {
-                      navigate(
-                        `/presentations/${presentationId}/presentation/${nextModule.filename}`
-                      );
-                      onSlideChange(0);
-                    }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="inline-flex items-center gap-3 px-8 py-4 bg-white text-primary rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-shadow"
-                  >
-                    <span>Continuer</span>
-                    <ArrowRight size={24} />
-                  </motion.button>
+
+                  {nextModule.optional && nextNonOptionalModule ? (
+                    <div className="space-y-4">
+                      <motion.div
+                        onClick={() => {
+                          navigate(
+                            `/presentations/${presentationId}/presentation/${nextModule.filename}`,
+                          );
+                          onSlideChange(0);
+                        }}
+                        whileHover={{ scale: 1.03, y: -5 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="bg-white/10 backdrop-blur-sm rounded-xl p-6 cursor-pointer hover:bg-white/20 transition-all"
+                      >
+                        <p className="text-sm opacity-75 mb-2">
+                          Module facultatif suivant
+                        </p>
+                        <h3 className="text-2xl font-bold mb-2 flex items-center justify-center gap-2">
+                          {nextModule.title}
+                          <ArrowRight size={24} />
+                        </h3>
+                      </motion.div>
+
+                      <motion.div
+                        onClick={() => {
+                          navigate(
+                            `/presentations/${presentationId}/presentation/${nextNonOptionalModule.filename}`,
+                          );
+                          onSlideChange(0);
+                        }}
+                        whileHover={{ scale: 1.03, y: -5 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="bg-white/10 backdrop-blur-sm rounded-xl p-6 cursor-pointer hover:bg-white/20 transition-all"
+                      >
+                        <p className="text-sm opacity-75 mb-2">
+                          Prochain module obligatoire
+                        </p>
+                        <h3 className="text-2xl font-bold flex items-center justify-center gap-2">
+                          {nextNonOptionalModule.title}
+                          <ArrowRight size={24} />
+                        </h3>
+                      </motion.div>
+                    </div>
+                  ) : (
+                    <motion.div
+                      onClick={() => {
+                        navigate(
+                          `/presentations/${presentationId}/presentation/${nextModule.filename}`,
+                        );
+                        onSlideChange(0);
+                      }}
+                      whileHover={{ scale: 1.03, y: -5 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="bg-white/10 backdrop-blur-sm rounded-xl p-6 cursor-pointer hover:bg-white/20 transition-all"
+                    >
+                      <p className="text-sm opacity-75 mb-2">Prochain module</p>
+                      <h3 className="text-2xl font-bold mb-2 flex items-center justify-center gap-2">
+                        {nextModule.title}
+                        <ArrowRight size={24} />
+                      </h3>
+                      {nextModule.optional && (
+                        <p className="text-xs opacity-60">(Facultatif)</p>
+                      )}
+                    </motion.div>
+                  )}
                 </motion.div>
               </motion.div>
             ) : (

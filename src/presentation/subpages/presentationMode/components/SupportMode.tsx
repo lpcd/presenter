@@ -17,6 +17,7 @@ interface SupportModeProps {
     filename: string;
     duration: string;
     topics: string[];
+    optional?: boolean;
   }>;
   currentModuleIndex: number;
 }
@@ -36,13 +37,13 @@ export const SupportMode = ({
 
   const filteredSections = content.sections
     .filter(
-      (section) => !section.duplicateInfo || section.duplicateInfo.isFirst
+      (section) => !section.duplicateInfo || section.duplicateInfo.isFirst,
     )
     .filter((section) => {
       const specialSlide = detectSpecialSlide(
         section.heading,
         section.content,
-        section.level
+        section.level,
       );
       return !specialSlide.type;
     })
@@ -87,7 +88,7 @@ export const SupportMode = ({
   const scrollToNextSection = useCallback(() => {
     const currentScrollY = window.scrollY + 150;
     const nextSection = sectionRefs.current.find(
-      (ref) => ref && ref.offsetTop > currentScrollY
+      (ref) => ref && ref.offsetTop > currentScrollY,
     );
     if (nextSection) {
       const headerOffset = 100;
@@ -120,7 +121,7 @@ export const SupportMode = ({
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
     },
-    [presentationId, navigate]
+    [presentationId, navigate],
   );
 
   return (
@@ -160,8 +161,8 @@ export const SupportMode = ({
                   section.level === 2
                     ? "text-3xl sm:text-4xl"
                     : section.level === 3
-                    ? "text-2xl sm:text-3xl"
-                    : "text-xl sm:text-2xl"
+                      ? "text-2xl sm:text-3xl"
+                      : "text-xl sm:text-2xl"
                 }`}
               >
                 {section.heading}
@@ -201,8 +202,21 @@ export const SupportMode = ({
                       : "hover:bg-gray-100 text-gray-700"
                   }`}
                 >
-                  <div className="font-medium">{module.title}</div>
-                  <div className="text-xs opacity-75">{module.duration}</div>
+                  <div className="font-medium">
+                    {module.title}
+                    {module.optional && (
+                      <span className="text-xs ml-2 opacity-75">
+                        (Facultatif)
+                      </span>
+                    )}
+                  </div>
+                  {module.duration &&
+                    module.duration !== "0" &&
+                    module.duration !== "0min" && (
+                      <div className="text-xs opacity-75">
+                        {module.duration}
+                      </div>
+                    )}
                 </button>
               ))}
             </div>
@@ -243,8 +257,8 @@ export const SupportMode = ({
                       section.level === 2
                         ? "font-semibold"
                         : section.level === 3
-                        ? "ml-2"
-                        : "ml-4 text-sm"
+                          ? "ml-2"
+                          : "ml-4 text-sm"
                     }`}
                   >
                     {section.heading}

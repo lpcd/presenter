@@ -10,6 +10,7 @@ interface ModulesMenuProps {
     filename: string;
     duration: string;
     topics: string[];
+    optional?: boolean;
   }>;
   currentModuleIndex: number;
   onNavigateToModule: (filename: string) => void;
@@ -52,8 +53,19 @@ export const ModulesMenu = ({
                     : "hover:bg-gray-100 text-gray-700"
                 }`}
               >
-                <div className="font-medium">{module.title}</div>
-                <div className="text-xs opacity-75">{module.duration}</div>
+                <div className="font-medium">
+                  {module.title}
+                  {module.optional && (
+                    <span className="text-xs ml-2 opacity-75">
+                      (Facultatif)
+                    </span>
+                  )}
+                </div>
+                {module.duration &&
+                  module.duration !== "0" &&
+                  module.duration !== "0min" && (
+                    <div className="text-xs opacity-75">{module.duration}</div>
+                  )}
               </button>
             ))}
           </div>

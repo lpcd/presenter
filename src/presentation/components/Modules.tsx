@@ -9,6 +9,7 @@ interface ModuleItem {
   duration?: string;
   topics?: string[];
   moduleText?: string;
+  optional?: boolean;
 }
 
 interface ModulesProps {
@@ -44,7 +45,11 @@ const Modules = ({ modules = defaultModules }: ModulesProps) => {
               transition={{ duration: 0.25, delay: index * 0.05 }}
               whileHover={{ y: -8, scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className={`relative bg-white rounded-2xl p-6 sm:p-8 shadow-md before:absolute before:top-0 before:left-0 before:w-full before:h-1 before:bg-gradient-to-r before:from-primary before:to-primary-dark before:rounded-t-xl focus-within:ring-4 focus-within:ring-primary/20 ${
+              className={`relative bg-white rounded-2xl p-6 sm:p-8 shadow-md border-t-4 focus-within:ring-4 focus-within:ring-primary/20 ${
+                module.optional
+                  ? "border-gray-400 opacity-75"
+                  : "border-primary"
+              } ${
                 module.link
                   ? "cursor-pointer hover:shadow-xl transition-shadow"
                   : ""
@@ -56,24 +61,45 @@ const Modules = ({ modules = defaultModules }: ModulesProps) => {
                   whileInView={{ scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.25, delay: index * 0.05 + 0.1 }}
-                  className="flex-shrink-0 inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary to-primary-dark text-white text-xl sm:text-2xl font-bold rounded-xl"
+                  className={`flex-shrink-0 inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br text-white text-xl sm:text-2xl font-bold rounded-xl ${
+                    module.optional
+                      ? "from-gray-400 to-gray-500"
+                      : "from-primary to-primary-dark"
+                  }`}
                 >
                   {module.moduleText ? <>{module.moduleText}</> : module.id}
                 </motion.div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-1 line-clamp-2">
+                  <h3
+                    className={`text-xl sm:text-2xl font-semibold mb-1 line-clamp-2 ${
+                      module.optional ? "text-gray-600" : "text-gray-800"
+                    }`}
+                  >
                     <InlineMarkdown content={module.title} />
                   </h3>
+                  {module.optional && (
+                    <p className="text-xs sm:text-sm italic text-gray-500">
+                      Facultatif
+                    </p>
+                  )}
                 </div>
                 {module.duration &&
                   module.duration !== "0" &&
                   module.duration !== "0min" && (
-                    <p className="text-xs sm:text-sm text-primary font-medium">
+                    <p
+                      className={`text-xs sm:text-sm font-medium ${
+                        module.optional ? "text-gray-500" : "text-primary"
+                      }`}
+                    >
                       ⏱️ {module.duration}
                     </p>
                   )}
               </div>
-              <div className="text-sm sm:text-base text-gray-600 leading-relaxed mb-3">
+              <div
+                className={`text-sm sm:text-base leading-relaxed mb-3 ${
+                  module.optional ? "text-gray-500" : "text-gray-600"
+                }`}
+              >
                 <InlineMarkdown content={module.description} />
               </div>
               {module.topics && module.topics.length > 0 && (

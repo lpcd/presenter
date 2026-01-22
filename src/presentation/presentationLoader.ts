@@ -9,7 +9,7 @@ const metadataFiles = import.meta.glob(
   {
     import: "default",
     eager: true,
-  }
+  },
 ) as Record<string, PresentationMetadata>;
 
 export interface PresentationModule {
@@ -20,6 +20,7 @@ export interface PresentationModule {
   duration: string;
   topics: string[];
   moduleText?: string;
+  optional?: boolean;
 }
 
 export interface PresentationData {
@@ -56,11 +57,13 @@ function parseModuleFile(markdown: string): {
   description: string;
   topics: string[];
   moduleText?: string;
+  optional?: boolean;
 } {
   const lines = markdown.split("\n");
   let title = "";
   let description = "";
   let moduleText: string | undefined = undefined;
+  let optional: boolean = false;
   const topics: string[] = [];
 
   for (let i = 0; i < lines.length; i++) {
@@ -73,7 +76,13 @@ function parseModuleFile(markdown: string): {
 
     const moduleMatch = cleanLine.match(/^module\s*:\s*(.+)$/i);
     if (moduleMatch) {
-      moduleText = moduleMatch[1].trim();
+      moduleText = moduleMatch[1].trim().replace(/\\/g, ""); // Remove escape backslashes
+      continue;
+    }
+
+    const optionalMatch = cleanLine.match(/^facultatif\s*:\s*(vrai|true)$/i);
+    if (optionalMatch) {
+      optional = true;
       continue;
     }
 
@@ -84,7 +93,8 @@ function parseModuleFile(markdown: string): {
       !cleanLine.startsWith("#") &&
       !cleanLine.startsWith("-") &&
       !cleanLine.toLowerCase().startsWith("module") &&
-      !cleanLine.toLowerCase().startsWith("durée")
+      !cleanLine.toLowerCase().startsWith("durée") &&
+      !cleanLine.toLowerCase().startsWith("facultatif")
     ) {
       description = cleanLine;
     }
@@ -96,7 +106,7 @@ function parseModuleFile(markdown: string): {
     }
   }
 
-  return { title, description, topics, moduleText };
+  return { title, description, topics, moduleText, optional };
 }
 
 function estimateDuration(markdown: string): string {
@@ -158,7 +168,13 @@ export function discoverPresentations(): PresentationData[] {
     const moduleInfo = parseModuleFile(content);
     const moduleIndex = parseInt(filename.match(/^(\d+)_/)?.[1] || "999");
 
-    if (moduleInfo.moduleText && moduleInfo.moduleText.includes("_")) {
+    // Skip modules with underscore in moduleText (like "2_1"), but keep Plan modules ("\_" or "_")
+    if (
+      moduleInfo.moduleText &&
+      moduleInfo.moduleText.includes("_") &&
+      moduleInfo.moduleText !== "_" &&
+      moduleInfo.moduleText !== "\\_"
+    ) {
       continue;
     }
 
@@ -170,11 +186,24 @@ export function discoverPresentations(): PresentationData[] {
       duration: estimateDuration(content),
       topics: moduleInfo.topics.slice(0, 5),
       moduleText: moduleInfo.moduleText,
+      optional: moduleInfo.optional,
     });
   }
 
   for (const presentation of presentationsMap.values()) {
-    presentation.modules.sort((a, b) => a.id - b.id);
+    // Sort modules: by id first, then optional after non-optional for same id
+    // Example: 1, 2, 2 facultatif, 3, 3 facultatif, ...
+    presentation.modules.sort((a, b) => {
+      // First, sort by id
+      if (a.id !== b.id) {
+        return a.id - b.id;
+      }
+      // For same id, non-optional comes first
+      if (a.optional !== b.optional) {
+        return a.optional ? 1 : -1;
+      }
+      return 0;
+    });
 
     if (presentation.duration === "0h") {
       const totalMinutes = presentation.modules.reduce((acc, module) => {
@@ -198,12 +227,12 @@ export function discoverPresentations(): PresentationData[] {
   }
 
   return Array.from(presentationsMap.values()).sort((a, b) =>
-    a.name.localeCompare(b.name)
+    a.name.localeCompare(b.name),
   );
 }
 
 export function getPresentation(
-  presentationId: string
+  presentationId: string,
 ): PresentationData | null {
   const presentations = discoverPresentations();
   return presentations.find((p) => p.id === presentationId) || null;

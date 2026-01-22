@@ -25,15 +25,17 @@ const Presentation = () => {
   const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [moduleTitle, setModuleTitle] = useState<string>("");
+  const [isModuleOptional, setIsModuleOptional] = useState<boolean>(false);
   const [nextModule, setNextModule] = useState<{
     id: number;
     title: string;
     filename: string;
+    optional?: boolean;
   } | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const [hideControlsTimeout, setHideControlsTimeout] = useState<number | null>(
-    null
+    null,
   );
   const [presentationName, setPresentationName] = useState<string>("");
   const [isEditingSlideNumber, setIsEditingSlideNumber] = useState(false);
@@ -46,6 +48,7 @@ const Presentation = () => {
       filename: string;
       duration: string;
       topics: string[];
+      optional?: boolean;
     }>
   >([]);
   const [currentModuleIndex, setCurrentModuleIndex] = useState<number>(0);
@@ -58,7 +61,7 @@ const Presentation = () => {
         navigate(`/presentations/${presentationId}/support/${filename}`);
       }
     },
-    [navigate, presentationId, filename]
+    [navigate, presentationId, filename],
   );
 
   useEffect(() => {
@@ -132,7 +135,7 @@ const Presentation = () => {
         }
       }
     },
-    [hideControlsTimeout, showControls, isEditingSlideNumber, isControlsLocked]
+    [hideControlsTimeout, showControls, isEditingSlideNumber, isControlsLocked],
   );
 
   const toggleFullscreen = useCallback(async () => {
@@ -154,14 +157,14 @@ const Presentation = () => {
         const folder = presentationId || "dotnet_unit_testing";
 
         const fileKey = Object.keys(moduleFiles).find((key) =>
-          key.includes(`assets/presentations/${folder}/${mdFilename}.md`)
+          key.includes(`assets/presentations/${folder}/${mdFilename}.md`),
         );
 
         if (!fileKey) {
           throw new Error(
             `Fichier non trouvé: ${folder}/${mdFilename}.md. Clés disponibles: ${
               Object.keys(moduleFiles).length
-            }`
+            }`,
           );
         }
 
@@ -171,14 +174,15 @@ const Presentation = () => {
 
         const presentation = folder ? getPresentation(folder) : null;
         const module = presentation?.modules.find(
-          (m) => m.filename === mdFilename
+          (m) => m.filename === mdFilename,
         );
         setModuleTitle(module?.title || "");
+        setIsModuleOptional(module?.optional || false);
         setPresentationName(presentation?.name || "");
 
         if (presentation && module) {
           const currentIndex = presentation.modules.findIndex(
-            (m) => m.filename === mdFilename
+            (m) => m.filename === mdFilename,
           );
           setCurrentModuleIndex(currentIndex);
           setAllModules(presentation.modules);
@@ -189,6 +193,7 @@ const Presentation = () => {
               id: next.id,
               title: next.title,
               filename: next.filename,
+              optional: next.optional,
             });
           } else {
             setNextModule(null);
@@ -200,7 +205,7 @@ const Presentation = () => {
         setError(
           err instanceof Error
             ? err.message
-            : "Erreur lors du chargement du fichier"
+            : "Erreur lors du chargement du fichier",
         );
       } finally {
         setLoading(false);
@@ -273,7 +278,7 @@ const Presentation = () => {
         if (currentModuleIndex > 0 && presentationId) {
           const previousModule = allModules[currentModuleIndex - 1];
           navigate(
-            `/presentations/${presentationId}/presentation/${previousModule.filename}`
+            `/presentations/${presentationId}/presentation/${previousModule.filename}`,
           );
         }
         return;
@@ -284,7 +289,7 @@ const Presentation = () => {
         if (currentModuleIndex < allModules.length - 1 && presentationId) {
           const nextMod = allModules[currentModuleIndex + 1];
           navigate(
-            `/presentations/${presentationId}/presentation/${nextMod.filename}`
+            `/presentations/${presentationId}/presentation/${nextMod.filename}`,
           );
         }
         return;
@@ -314,7 +319,7 @@ const Presentation = () => {
       allModules,
       presentationId,
       navigate,
-    ]
+    ],
   );
 
   if (loading) {
@@ -356,6 +361,7 @@ const Presentation = () => {
           onToggleFullscreen={toggleFullscreen}
           isControlsLocked={isControlsLocked}
           onToggleControlsLock={() => setIsControlsLocked(!isControlsLocked)}
+          isModuleOptional={isModuleOptional}
         />
       </div>
 
@@ -378,6 +384,7 @@ const Presentation = () => {
         showTableOfContents={showTableOfContents}
         onShowModulesMenuChange={setShowModulesMenu}
         onShowTableOfContentsChange={setShowTableOfContents}
+        isModuleOptional={isModuleOptional}
       />
     </div>
   );

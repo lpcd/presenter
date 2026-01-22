@@ -26,6 +26,7 @@ const Support = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [moduleTitle, setModuleTitle] = useState<string>("");
+  const [isModuleOptional, setIsModuleOptional] = useState<boolean>(false);
   const [currentModuleIndex, setCurrentModuleIndex] = useState<number>(0);
   const [allModules, setAllModules] = useState<
     Array<{
@@ -35,6 +36,7 @@ const Support = () => {
       filename: string;
       duration: string;
       topics: string[];
+      optional?: boolean;
     }>
   >([]);
   const [presentationName, setPresentationName] = useState<string>("");
@@ -45,7 +47,7 @@ const Support = () => {
         navigate(`/presentations/${presentationId}/presentation/${filename}`);
       }
     },
-    [navigate, presentationId, filename]
+    [navigate, presentationId, filename],
   );
 
   const handleExportPDF = useCallback(async () => {
@@ -62,7 +64,7 @@ const Support = () => {
         const folder = presentationId || "dotnet_unit_testing";
 
         const fileKey = Object.keys(moduleFiles).find((key) =>
-          key.includes(`assets/presentations/${folder}/${mdFilename}.md`)
+          key.includes(`assets/presentations/${folder}/${mdFilename}.md`),
         );
 
         if (!fileKey) {
@@ -71,14 +73,15 @@ const Support = () => {
 
         const presentation = folder ? getPresentation(folder) : null;
         const module = presentation?.modules.find(
-          (m) => m.filename === mdFilename
+          (m) => m.filename === mdFilename,
         );
         setModuleTitle(module?.title || "");
+        setIsModuleOptional(module?.optional || false);
         setPresentationName(presentation?.name || "");
 
         if (presentation && module) {
           const currentIndex = presentation.modules.findIndex(
-            (m) => m.filename === mdFilename
+            (m) => m.filename === mdFilename,
           );
           setCurrentModuleIndex(currentIndex);
           setAllModules(presentation.modules);
@@ -91,7 +94,7 @@ const Support = () => {
         setError(
           err instanceof Error
             ? err.message
-            : "Erreur lors du chargement du fichier"
+            : "Erreur lors du chargement du fichier",
         );
       } finally {
         setLoading(false);
@@ -134,6 +137,7 @@ const Support = () => {
         isFullscreen={false}
         onToggleFullscreen={() => {}}
         onExportPDF={handleExportPDF}
+        isModuleOptional={isModuleOptional}
       />
       <SupportMode
         content={content}
