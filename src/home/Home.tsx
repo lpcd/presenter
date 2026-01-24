@@ -11,13 +11,16 @@ const Home = () => {
 
   const presentationsCount = useMemo(
     () => presentations.length,
-    [presentations.length]
+    [presentations.length],
   );
 
   useEffect(() => {
     try {
       const allPresentations = getAllPresentations();
-      setPresentations(allPresentations);
+      const filtered = homeConfig.hideExamplePresentation
+        ? allPresentations.filter((p) => p.id !== "exemple")
+        : allPresentations;
+      setPresentations(filtered);
     } catch (error) {
       console.error("Erreur lors du chargement des présentations:", error);
     } finally {
