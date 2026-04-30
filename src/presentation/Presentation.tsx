@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import HeroHeader from "./components/HeroHeader";
 import Modules from "./components/Modules";
@@ -58,10 +59,10 @@ const Presentation = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-brand-page">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg">
+          <p className="text-brand-muted text-lg">
             Chargement de la présentation...
           </p>
         </div>
@@ -71,18 +72,18 @@ const Presentation = () => {
 
   if (error || !presentation) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-        <div className="max-w-md w-full bg-white rounded-2xl p-8 shadow-lg text-center">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">
+      <div className="min-h-screen flex items-center justify-center bg-brand-page px-4">
+        <div className="max-w-md w-full bg-surface rounded-2xl p-8 shadow-lg text-center border border-border-subtle">
+          <h1 className="text-2xl font-bold text-brand-text mb-4">
             Présentation non trouvée
           </h1>
-          <p className="text-gray-600 mb-6">{error}</p>
-          <a
-            href="/"
+          <p className="text-brand-muted mb-6">{error}</p>
+          <Link
+            to="/"
             className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-full font-semibold hover:bg-primary-dark transition-colors"
           >
             Retour à l'accueil
-          </a>
+          </Link>
         </div>
       </div>
     );

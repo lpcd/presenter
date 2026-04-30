@@ -78,7 +78,7 @@ export const SlideNavigation = ({
         setShowModulesMenu(false);
       }
     },
-    [presentationId, navigate],
+    [presentationId, navigate, setShowModulesMenu],
   );
 
   const handleModulesMenuToggle = () => {

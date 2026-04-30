@@ -1,3 +1,5 @@
+import { appConfig } from "../config";
+
 const moduleFiles = import.meta.glob("../assets/presentations/**/*.md", {
   query: "?raw",
   import: "default",
@@ -11,6 +13,15 @@ const metadataFiles = import.meta.glob(
     eager: true,
   },
 ) as Record<string, PresentationMetadata>;
+
+let presentationsCache: PresentationData[] | null = null;
+let categoriesCache: PresentationCategory[] | null = null;
+
+export interface PresentationCategory {
+  id: string;
+  label: string;
+  type: string;
+}
 
 export interface PresentationModule {
   id: number;
@@ -50,6 +61,40 @@ interface PresentationMetadata {
   prerequisites: string[];
   estimatedDuration: string;
   level: string;
+}
+
+const toCategoryId = (value: string): string =>
+  value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
+export function getPresentationCategories(): PresentationCategory[] {
+  if (categoriesCache) {
+    return categoriesCache;
+  }
+
+  const categoriesByType = new Map<string, PresentationCategory>();
+
+  for (const metadata of Object.values(metadataFiles)) {
+    const type =
+      metadata?.type?.trim() || appConfig.presentations.uncategorizedLabel;
+    if (!categoriesByType.has(type)) {
+      categoriesByType.set(type, {
+        id: toCategoryId(type) || "autres",
+        label: type,
+        type,
+      });
+    }
+  }
+
+  categoriesCache = Array.from(categoriesByType.values()).sort((a, b) =>
+    a.label.localeCompare(b.label),
+  );
+
+  return categoriesCache;
 }
 
 function parseModuleFile(markdown: string): {
@@ -121,6 +166,10 @@ function estimateDuration(markdown: string): string {
 }
 
 export function discoverPresentations(): PresentationData[] {
+  if (appConfig.cache.presentations.enabled && presentationsCache) {
+    return presentationsCache;
+  }
+
   const presentationsMap = new Map<string, PresentationData>();
 
   for (const [path, content] of Object.entries(moduleFiles)) {
@@ -226,9 +275,15 @@ export function discoverPresentations(): PresentationData[] {
     }
   }
 
-  return Array.from(presentationsMap.values()).sort((a, b) =>
-    a.name.localeCompare(b.name),
+  const discoveredPresentations = Array.from(presentationsMap.values()).sort(
+    (a, b) => a.name.localeCompare(b.name),
   );
+
+  if (appConfig.cache.presentations.enabled) {
+    presentationsCache = discoveredPresentations;
+  }
+
+  return discoveredPresentations;
 }
 
 export function getPresentation(

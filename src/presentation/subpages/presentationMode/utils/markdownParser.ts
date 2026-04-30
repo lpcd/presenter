@@ -2,7 +2,7 @@ import type { ParsedContent } from "../types";
 
 export const parseMarkdown = (
   markdown: string,
-  enableSplits: boolean = true
+  enableSplits: boolean = true,
 ): ParsedContent => {
   const lines = markdown.split("\n");
   const sections: ParsedContent["sections"] = [];
@@ -14,7 +14,6 @@ export const parseMarkdown = (
   } | null = null;
   let inCodeBlock = false;
   let consecutiveSeparators = 0;
-  let splitCounter = 1;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -89,44 +88,40 @@ export const parseMarkdown = (
     });
   }
 
-  const headingCounts = new Map<string, number>();
-  const headingOccurrences = new Map<string, number>();
-  const headingContents = new Map<string, string[]>();
+  const enrichedSections = sections.map((section) => ({ ...section }));
 
-  sections.forEach((section) => {
-    const count = headingCounts.get(section.heading) || 0;
-    headingCounts.set(section.heading, count + 1);
+  let runStartIndex = 0;
 
-    const contents = headingContents.get(section.heading) || [];
-    contents.push(section.content);
-    headingContents.set(section.heading, contents);
-  });
+  while (runStartIndex < sections.length) {
+    const current = sections[runStartIndex];
+    let runEndIndex = runStartIndex;
 
-  const enrichedSections = sections.map((section) => {
-    const totalOccurrences = headingCounts.get(section.heading) || 1;
+    while (runEndIndex + 1 < sections.length) {
+      const next = sections[runEndIndex + 1];
+      const isSameConsecutiveHeading =
+        next.heading === current.heading && next.level === current.level;
 
-    if (totalOccurrences > 1) {
-      const currentOccurrence =
-        (headingOccurrences.get(section.heading) || 0) + 1;
-      headingOccurrences.set(section.heading, currentOccurrence);
+      if (!isSameConsecutiveHeading) {
+        break;
+      }
 
-      const mergedContent = (headingContents.get(section.heading) || []).join(
-        "\n\n"
-      );
-
-      return {
-        ...section,
-        mergedContent,
-        duplicateInfo: {
-          current: currentOccurrence,
-          total: totalOccurrences,
-          isFirst: currentOccurrence === 1,
-        },
-      };
+      runEndIndex++;
     }
 
-    return section;
-  });
+    const runLength = runEndIndex - runStartIndex + 1;
+    if (runLength > 1) {
+      for (let offset = 0; offset < runLength; offset++) {
+        const index = runStartIndex + offset;
+        enrichedSections[index].duplicateInfo = {
+          current: offset + 1,
+          total: runLength,
+          isFirst: offset === 0,
+        };
+      }
+    }
+
+    runStartIndex = runEndIndex + 1;
+  }
 
   return { title, sections: enrichedSections };
 };

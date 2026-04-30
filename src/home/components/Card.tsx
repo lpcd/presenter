@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { BookOpen, Clock, Award } from "lucide-react";
+import { Link } from "react-router-dom";
 import { InlineMarkdown } from "../../presentation/subpages/presentationMode/components/InlineMarkdown";
 
 interface CardProps {
@@ -19,6 +20,8 @@ interface CardProps {
   };
 }
 
+const MotionLink = motion(Link);
+
 const Card = ({
   name,
   description,
@@ -29,18 +32,18 @@ const Card = ({
   link,
   moduleText,
   colorGradient = {
-    from: "from-primary",
-    via: "via-primary-dark",
-    to: "to-secondary",
+    from: "from-brand-gradient-1-from",
+    via: "via-brand-gradient-1-via",
+    to: "to-brand-gradient-1-to",
   },
 }: CardProps) => {
   return (
-    <motion.a
-      href={link}
+    <MotionLink
+      to={link}
       whileHover={{ scale: 1.03, y: -5 }}
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2 }}
-      className="flex flex-col h-full bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-shadow overflow-hidden group"
+      className="flex flex-col h-full bg-surface rounded-2xl shadow-lg hover:shadow-2xl transition-shadow overflow-hidden group border border-border-subtle"
     >
       <div
         className={`h-32 bg-gradient-to-br ${colorGradient.from} ${colorGradient.via} ${colorGradient.to} relative overflow-hidden`}
@@ -54,20 +57,20 @@ const Card = ({
       </div>
 
       <div className="flex-1 p-6 flex flex-col">
-        <p className="text-gray-600 mb-4 line-clamp-2">
+        <p className="text-brand-muted mb-4 line-clamp-2">
           <InlineMarkdown content={description} />
         </p>
 
         <div className="flex flex-wrap gap-3 mb-4">
-          <div className="flex items-center gap-2 text-sm text-gray-500">
+          <div className="flex items-center gap-2 text-sm text-brand-subtle">
             <Clock size={16} className="text-primary" />
             <span>{duration}</span>
           </div>
-          <div className="flex items-center gap-2 text-sm text-gray-500">
+          <div className="flex items-center gap-2 text-sm text-brand-subtle">
             <Award size={16} className="text-primary" />
             <span>{level}</span>
           </div>
-          <div className="flex items-center gap-2 text-sm text-gray-500">
+          <div className="flex items-center gap-2 text-sm text-brand-subtle">
             <BookOpen size={16} className="text-primary" />
             <span>{type}</span>
           </div>
@@ -86,7 +89,7 @@ const Card = ({
           </div>
         </div>
       </div>
-    </motion.a>
+    </MotionLink>
   );
 };
 

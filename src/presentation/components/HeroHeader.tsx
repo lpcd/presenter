@@ -1,5 +1,6 @@
 import { Play, ChevronDown, Home } from "lucide-react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import type { HeroConfig } from "../presentation.types";
 import { InlineMarkdown } from "../subpages/presentationMode/components/InlineMarkdown";
 
@@ -14,6 +15,8 @@ const defaultConfig: HeroConfig = {
   buttonLink: "#",
 };
 
+const MotionLink = motion(Link);
+
 const HeroHeader = ({ config = defaultConfig }: HeroHeaderProps) => {
   const handleScrollDown = () => {
     window.scrollTo({
@@ -24,18 +27,18 @@ const HeroHeader = ({ config = defaultConfig }: HeroHeaderProps) => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen relative bg-gradient-to-br from-primary to-primary-dark text-white px-4 sm:px-8">
-      <motion.a
+      <MotionLink
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3, delay: 0.15 }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        href="/"
+        to="/"
         className="absolute top-8 left-8 inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white rounded-full font-medium transition-colors shadow-lg"
       >
         <Home size={20} />
         <span className="hidden sm:inline">Accueil</span>
-      </motion.a>
+      </MotionLink>
 
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -88,18 +91,18 @@ const HeroHeader = ({ config = defaultConfig }: HeroHeaderProps) => {
             ))}
           </motion.div>
         )}
-        <motion.a
+        <MotionLink
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.25, delay: 0.25 }}
           whileHover={{ scale: 1.05, y: -2 }}
           whileTap={{ scale: 0.95 }}
-          href={config.buttonLink}
+          to={config.buttonLink}
           className="inline-flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-white text-primary rounded-full font-semibold text-base sm:text-lg shadow-lg focus:outline-none focus:ring-4 focus:ring-white/50"
         >
           <Play size={24} />
           <span>{config.buttonText}</span>
-        </motion.a>
+        </MotionLink>
       </motion.div>
       <motion.button
         initial={{ opacity: 0 }}

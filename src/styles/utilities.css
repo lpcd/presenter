@@ -1,0 +1,17 @@
+@layer utilities {
+  .bg-brand-page {
+    background-color: rgb(var(--color-page));
+  }
+
+  .text-brand-text {
+    color: rgb(var(--color-text));
+  }
+
+  .text-brand-muted {
+    color: rgb(var(--color-text-muted));
+  }
+
+  .text-brand-subtle {
+    color: rgb(var(--color-text-subtle));
+  }
+}

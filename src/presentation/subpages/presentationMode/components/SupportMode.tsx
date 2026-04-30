@@ -136,14 +136,14 @@ export const SupportMode = ({
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="bg-gradient-to-r from-primary to-blue-600 text-white rounded-2xl shadow-2xl p-8 sm:p-12 mb-8"
+          className="bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl shadow-2xl p-8 sm:p-12 mb-8"
         >
           <h1 className="text-3xl sm:text-5xl font-bold text-center">
             {moduleTitle}
           </h1>
         </motion.div>
 
-        <div className="bg-white rounded-2xl shadow-2xl p-8 sm:p-12 space-y-12 overflow-x-hidden support-content">
+        <div className="bg-surface rounded-2xl shadow-2xl p-8 sm:p-12 space-y-12 overflow-x-hidden support-content border border-border-subtle">
           {filteredSections.map((section, index) => (
             <motion.article
               key={index}
@@ -180,13 +180,13 @@ export const SupportMode = ({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -300 }}
             transition={{ duration: 0.3 }}
-            className="fixed left-4 top-24 bg-white rounded-xl shadow-2xl p-4 z-40 max-w-xs max-h-[70vh] overflow-y-auto"
+            className="fixed left-4 top-24 bg-surface rounded-xl shadow-2xl p-4 z-40 max-w-xs max-h-[70vh] overflow-y-auto border border-border-subtle"
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-gray-800">Modules</h3>
+              <h3 className="font-bold text-brand-text">Modules</h3>
               <button
                 onClick={() => setShowModulesMenu(false)}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-brand-subtle hover:text-brand-text"
               >
                 ✕
               </button>
@@ -199,7 +199,7 @@ export const SupportMode = ({
                   className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
                     index === currentModuleIndex
                       ? "bg-primary text-white"
-                      : "hover:bg-gray-100 text-gray-700"
+                      : "hover:bg-surface-muted text-brand-muted"
                   }`}
                 >
                   <div className="font-medium">
@@ -231,13 +231,13 @@ export const SupportMode = ({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 300 }}
             transition={{ duration: 0.3 }}
-            className="fixed right-4 top-24 bg-white rounded-xl shadow-2xl p-4 z-40 max-w-xs max-h-[70vh] overflow-y-auto"
+            className="fixed right-4 top-24 bg-surface rounded-xl shadow-2xl p-4 z-40 max-w-xs max-h-[70vh] overflow-y-auto border border-border-subtle"
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-gray-800">Sommaire</h3>
+              <h3 className="font-bold text-brand-text">Sommaire</h3>
               <button
                 onClick={() => setShowTableOfContents(false)}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-brand-subtle hover:text-brand-text"
               >
                 ✕
               </button>
@@ -250,7 +250,7 @@ export const SupportMode = ({
                     scrollToSection(index);
                     setShowTableOfContents(false);
                   }}
-                  className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-700 transition-colors"
+                  className="w-full text-left px-4 py-2 rounded-lg hover:bg-surface-muted text-brand-muted transition-colors"
                 >
                   <div
                     className={`${
@@ -293,7 +293,7 @@ export const SupportMode = ({
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           onClick={scrollToPreviousSection}
-          className="bg-white text-primary p-3 rounded-full shadow-xl hover:shadow-2xl hover:bg-gray-50 transition-all mx-auto"
+          className="bg-surface text-primary p-3 rounded-full shadow-xl hover:shadow-2xl hover:bg-surface-muted transition-all mx-auto border border-border-subtle"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           aria-label="Section précédente"
@@ -305,7 +305,7 @@ export const SupportMode = ({
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           onClick={scrollToNextSection}
-          className="bg-white text-primary p-3 rounded-full shadow-xl hover:shadow-2xl hover:bg-gray-50 transition-all mx-auto"
+          className="bg-surface text-primary p-3 rounded-full shadow-xl hover:shadow-2xl hover:bg-surface-muted transition-all mx-auto border border-border-subtle"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           aria-label="Section suivante"
@@ -332,7 +332,7 @@ export const SupportMode = ({
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           onClick={() => setShowTableOfContents(!showTableOfContents)}
-          className="bg-white text-primary p-4 rounded-full shadow-xl hover:shadow-2xl hover:bg-gray-50 transition-all"
+          className="bg-surface text-primary p-4 rounded-full shadow-xl hover:shadow-2xl hover:bg-surface-muted transition-all border border-border-subtle"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           aria-label="Sommaire"

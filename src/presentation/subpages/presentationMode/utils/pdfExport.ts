@@ -1,12 +1,43 @@
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { appConfig } from "../../../../config";
+
+const getCodeBlockExportStyles = (scopeSelector: string): string => {
+  if (appConfig.pdf.codeBlockRenderMode === "scale") {
+    return `
+      ${scopeSelector} pre,
+      ${scopeSelector} code,
+      ${scopeSelector} .hljs {
+        white-space: pre !important;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+      }
+
+      ${scopeSelector} pre {
+        width: max-content !important;
+        max-width: none !important;
+      }
+    `;
+  }
+
+  return `
+    ${scopeSelector} pre,
+    ${scopeSelector} code,
+    ${scopeSelector} .hljs {
+      white-space: pre-wrap !important;
+      word-break: break-word !important;
+      overflow-wrap: anywhere !important;
+    }
+  `;
+};
 
 export const exportSlidesPDF = async (
   presentationName: string,
   moduleTitle: string,
   totalSlides: number,
-  onSlideChange: (index: number) => void
+  onSlideChange: (index: number) => void,
 ): Promise<void> => {
+  let styleElement: HTMLStyleElement | null = null;
   try {
     const pdf = new jsPDF({
       orientation: "landscape",
@@ -16,12 +47,19 @@ export const exportSlidesPDF = async (
 
     let isFirstPage = true;
 
-    const styleElement = document.createElement("style");
+    styleElement = document.createElement("style");
     styleElement.innerHTML = `
       * {
         animation: none !important;
         transition: none !important;
       }
+
+      .slide-content-container,
+      .slide-content-container * {
+        overflow: visible !important;
+      }
+
+      ${getCodeBlockExportStyles(".slide-content-container")}
     `;
     document.head.appendChild(styleElement);
 
@@ -41,10 +79,22 @@ export const exportSlidesPDF = async (
         useCORS: true,
         logging: false,
         backgroundColor: null,
-        windowWidth: (slideElement as HTMLElement).scrollWidth,
-        windowHeight: (slideElement as HTMLElement).scrollHeight,
-        width: (slideElement as HTMLElement).scrollWidth,
-        height: (slideElement as HTMLElement).scrollHeight,
+        windowWidth: Math.max(
+          (slideElement as HTMLElement).scrollWidth,
+          (slideElement as HTMLElement).clientWidth,
+        ),
+        windowHeight: Math.max(
+          (slideElement as HTMLElement).scrollHeight,
+          (slideElement as HTMLElement).clientHeight,
+        ),
+        width: Math.max(
+          (slideElement as HTMLElement).scrollWidth,
+          (slideElement as HTMLElement).clientWidth,
+        ),
+        height: Math.max(
+          (slideElement as HTMLElement).scrollHeight,
+          (slideElement as HTMLElement).clientHeight,
+        ),
         scrollX: 0,
         scrollY: 0,
       });
@@ -69,9 +119,6 @@ export const exportSlidesPDF = async (
 
       pdf.addImage(imgData, "PNG", x, y, finalWidth, finalHeight);
     }
-
-    document.head.removeChild(styleElement);
-
     const fileName = `${presentationName}_${moduleTitle}_slides.pdf`
       .replace(/[^a-z0-9_-]/gi, "_")
       .toLowerCase();
@@ -79,13 +126,18 @@ export const exportSlidesPDF = async (
   } catch (error) {
     console.error("Erreur lors de l'export PDF:", error);
     throw error;
+  } finally {
+    if (styleElement && document.head.contains(styleElement)) {
+      document.head.removeChild(styleElement);
+    }
   }
 };
 
 export const exportSupportPDF = async (
   presentationName: string,
-  moduleTitle: string
+  moduleTitle: string,
 ): Promise<void> => {
+  let styleElement: HTMLStyleElement | null = null;
   try {
     const pdf = new jsPDF({
       orientation: "portrait",
@@ -104,12 +156,19 @@ export const exportSupportPDF = async (
     pdf.text(titleLines, margin, yPosition);
     yPosition += titleLines.length * 10 + 10;
 
-    const styleElement = document.createElement("style");
+    styleElement = document.createElement("style");
     styleElement.innerHTML = `
       * {
         animation: none !important;
         transition: none !important;
       }
+
+      .support-content,
+      .support-content * {
+        overflow: visible !important;
+      }
+
+      ${getCodeBlockExportStyles(".support-content")}
     `;
     document.head.appendChild(styleElement);
 
@@ -123,13 +182,21 @@ export const exportSupportPDF = async (
     for (let i = 0; i < sections.length; i++) {
       const section = sections[i] as HTMLElement;
 
+      const sectionWidth = Math.max(section.scrollWidth, section.clientWidth);
+      const sectionHeight = Math.max(
+        section.scrollHeight,
+        section.clientHeight,
+      );
+
       const canvas = await html2canvas(section, {
         scale: 2,
         useCORS: true,
         logging: false,
         backgroundColor: "#ffffff",
-        windowWidth: section.scrollWidth,
-        windowHeight: section.scrollHeight,
+        windowWidth: sectionWidth,
+        windowHeight: sectionHeight,
+        width: sectionWidth,
+        height: sectionHeight,
       });
 
       const imgData = canvas.toDataURL("image/png");
@@ -165,7 +232,7 @@ export const exportSupportPDF = async (
               0,
               0,
               canvas.width,
-              sourceSliceHeight
+              sourceSliceHeight,
             );
 
             const sliceData = tempCanvas.toDataURL("image/png");
@@ -175,7 +242,7 @@ export const exportSupportPDF = async (
               margin,
               yPosition,
               imgWidth,
-              sliceHeight
+              sliceHeight,
             );
           }
 
@@ -199,9 +266,6 @@ export const exportSupportPDF = async (
         yPosition = margin;
       }
     }
-
-    document.head.removeChild(styleElement);
-
     const fileName = `${presentationName}_${moduleTitle}_support.pdf`
       .replace(/[^a-z0-9_-]/gi, "_")
       .toLowerCase();
@@ -209,5 +273,9 @@ export const exportSupportPDF = async (
   } catch (error) {
     console.error("Erreur lors de l'export PDF du support:", error);
     throw error;
+  } finally {
+    if (styleElement && document.head.contains(styleElement)) {
+      document.head.removeChild(styleElement);
+    }
   }
 };

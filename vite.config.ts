@@ -46,4 +46,35 @@ export default defineConfig({
   plugins: [react(), copyPresentationResources()],
   assetsInclude: ["**/*.md", "**/*.pdf"],
   publicDir: "public",
+  build: {
+    // Lazy chunks for CodeMirror and Milkdown are intentionally large;
+    // raise the limit to avoid noise (they are only loaded on demand).
+    chunkSizeWarningLimit: 1800,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          // Group all @codemirror/* and @uiw/react-codemirror into one chunk
+          if (id.includes("node_modules/@codemirror") || id.includes("node_modules/@uiw")) {
+            return "vendor-codemirror";
+          }
+          // Group all @milkdown/* and @prosemirror/* into one chunk
+          if (id.includes("node_modules/@milkdown") || id.includes("node_modules/@prosemirror")) {
+            return "vendor-milkdown";
+          }
+          // KaTeX (pulled in transitively by Milkdown)
+          if (id.includes("node_modules/katex")) {
+            return "vendor-katex";
+          }
+          // Highlight.js (used in presentation mode)
+          if (id.includes("node_modules/highlight.js")) {
+            return "vendor-highlight";
+          }
+          // Group remaining large vendor libs
+          if (id.includes("node_modules/framer-motion")) {
+            return "vendor-framer";
+          }
+        },
+      },
+    },
+  },
 });

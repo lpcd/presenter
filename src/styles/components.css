@@ -1,0 +1,178 @@
+@layer components {
+  /* Markdown tables in presentation/support content */
+  .prose table {
+    @apply w-full border-collapse;
+  }
+
+  .prose thead {
+    background-color: rgb(var(--color-surface-muted));
+  }
+
+  .prose thead th {
+    @apply px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider border-b-2;
+    color: rgb(var(--color-text-muted));
+    border-color: rgb(var(--color-border));
+  }
+
+  .prose tbody {
+    background-color: rgb(var(--color-surface));
+  }
+
+  .prose tbody tr {
+    @apply transition-colors;
+  }
+
+  .prose tbody tr:hover {
+    background-color: rgb(var(--color-surface-muted));
+  }
+
+  .prose tbody td {
+    @apply px-6 py-4 text-sm;
+    color: rgb(var(--color-text));
+  }
+
+  .prose .table-wrapper {
+    @apply overflow-x-auto my-6 rounded-lg border shadow-sm;
+    border-color: rgb(var(--color-border));
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Markdown lists in slides and support pages */
+  .prose ul {
+    @apply list-disc list-inside space-y-2 my-4 ml-4;
+  }
+
+  .prose ol {
+    @apply list-decimal list-inside space-y-2 my-4 ml-4;
+  }
+
+  .prose li {
+    @apply leading-relaxed pl-2;
+    color: rgb(var(--color-text-muted));
+  }
+
+  .prose ul ul,
+  .prose ol ul {
+    @apply list-disc list-inside space-y-1 my-2 ml-6;
+  }
+
+  .prose ul ol,
+  .prose ol ol {
+    @apply list-decimal list-inside space-y-1 my-2 ml-6;
+  }
+
+  .prose li > p {
+    @apply inline;
+  }
+
+  .prose li::marker {
+    @apply font-semibold;
+    color: rgb(var(--color-primary));
+  }
+
+  /* Inline markdown snippets used in cards, headers and text blocks */
+  .inline-markdown strong {
+    @apply font-bold;
+  }
+
+  .inline-markdown em {
+    @apply italic;
+  }
+
+  .inline-markdown code {
+    @apply px-1.5 py-0.5 rounded font-mono text-sm;
+    background-color: rgb(var(--color-primary) / 0.12);
+    color: rgb(var(--color-primary));
+  }
+
+  .inline-markdown a {
+    @apply underline transition-colors;
+    color: rgb(var(--color-primary));
+  }
+
+  .inline-markdown a:hover {
+    color: rgb(var(--color-primary-dark));
+  }
+}
+
+/* ── Milkdown Crepe editor overrides ─────────────────────────────────────────
+   Adapts the Crepe theme to the app's design system (light + dark mode).
+
+   Layout strategy:
+   - .rich-editor-container: fixed height wrapper, overflow VISIBLE so that
+     floating-ui absolute-positioned tooltips/toolbar are NOT clipped.
+   - .ProseMirror: gets overflow-y: auto so the text content scrolls inside.
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* Container: fixed height, overflow visible so absolute tooltips aren't cut */
+.rich-editor-container {
+  position: relative;
+  overflow: visible !important;
+}
+
+/* Scroll happens on ProseMirror itself, not on an ancestor.
+   padding-left: 80px reserves space for the block handle buttons
+   (2 × 32px buttons + gap + 16px floating-ui offset = ~80px). */
+.rich-editor-container .milkdown .ProseMirror {
+  overflow-y: auto;
+  height: var(--editor-height, 680px);
+  padding: 20px 24px 20px 80px;
+  box-sizing: border-box;
+}
+
+/* Override Crepe colors to use the app's CSS token palette */
+.rich-editor-container .milkdown {
+  --crepe-color-background: transparent;
+  --crepe-color-on-background: rgb(var(--color-text));
+  --crepe-color-surface: rgb(var(--color-surface));
+  --crepe-color-surface-low: rgb(var(--color-surface-muted));
+  --crepe-color-on-surface: rgb(var(--color-text));
+  --crepe-color-on-surface-variant: rgb(var(--color-text-muted));
+  --crepe-color-outline: rgb(var(--color-border));
+  --crepe-color-primary: rgb(var(--color-primary));
+  --crepe-color-secondary: rgb(var(--color-surface-muted));
+  --crepe-color-on-secondary: rgb(var(--color-text));
+  --crepe-color-inverse: rgb(var(--color-surface-strong));
+  --crepe-color-on-inverse: rgb(var(--color-text));
+  --crepe-color-inline-code: rgb(var(--color-primary));
+  --crepe-color-error: #ef4444;
+  --crepe-color-hover: rgb(var(--color-surface-muted));
+  --crepe-color-selected: rgb(var(--color-primary) / 0.15);
+  --crepe-color-inline-area: rgb(var(--color-surface-strong));
+  /* Shadow used by table/list handles — must be defined or handles are invisible */
+  --crepe-shadow-1: 0 1px 4px 0 rgb(0 0 0 / 0.12), 0 0 0 1px rgb(var(--color-border) / 0.4);
+
+  background: transparent;
+  color: rgb(var(--color-text));
+}
+
+/* ── Table styles in Crepe editor ─────────────────────────────────────────── */
+/* Ensure table cells have visible borders and correct layout */
+.rich-editor-container .milkdown .milkdown-table-block {
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.rich-editor-container .milkdown .milkdown-table-block table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.9em;
+}
+
+.rich-editor-container .milkdown .milkdown-table-block th,
+.rich-editor-container .milkdown .milkdown-table-block td {
+  border: 1px solid rgb(var(--color-border));
+  padding: 6px 14px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.rich-editor-container .milkdown .milkdown-table-block th {
+  background-color: rgb(var(--color-surface-muted));
+  font-weight: 600;
+  color: rgb(var(--color-text));
+}
+
+.rich-editor-container .milkdown .milkdown-table-block tr:nth-child(even) td {
+  background-color: rgb(var(--color-surface-muted) / 0.4);
+}

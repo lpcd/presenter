@@ -1,26 +1,13 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { motion } from "framer-motion";
-import { Search, X } from "lucide-react";
 import Card from "./Card";
+import { appConfig } from "../../config/config";
+import {
+  getPresentationCategories,
+  type PresentationCategory,
+} from "../../presentation";
 
-const colorPalette = [
-  { from: "from-blue-800", via: "via-blue-900", to: "to-indigo-950" },
-  { from: "from-purple-800", via: "via-purple-900", to: "to-pink-950" },
-  { from: "from-green-800", via: "via-green-900", to: "to-teal-950" },
-  { from: "from-orange-800", via: "via-orange-900", to: "to-red-950" },
-  { from: "from-cyan-800", via: "via-cyan-900", to: "to-blue-950" },
-  { from: "from-rose-800", via: "via-rose-900", to: "to-pink-950" },
-  { from: "from-amber-800", via: "via-amber-900", to: "to-orange-950" },
-  { from: "from-emerald-800", via: "via-emerald-900", to: "to-green-950" },
-  { from: "from-violet-800", via: "via-violet-900", to: "to-purple-950" },
-  { from: "from-sky-800", via: "via-sky-900", to: "to-cyan-950" },
-  { from: "from-fuchsia-800", via: "via-fuchsia-900", to: "to-purple-950" },
-  { from: "from-lime-800", via: "via-lime-900", to: "to-green-950" },
-  { from: "from-teal-800", via: "via-teal-900", to: "to-cyan-950" },
-  { from: "from-indigo-800", via: "via-indigo-900", to: "to-blue-950" },
-  { from: "from-red-800", via: "via-red-900", to: "to-rose-950" },
-  { from: "from-slate-800", via: "via-slate-900", to: "to-gray-950" },
-];
+const colorPalette = appConfig.presentations.cardGradients;
 
 const getColorIndex = (currentIndex: number, columns: number = 3): number => {
   const row = Math.floor(currentIndex / columns);
@@ -39,23 +26,68 @@ interface Presentation {
   tags: string[];
 }
 
+interface PresentationSection {
+  category: PresentationCategory;
+  items: Presentation[];
+}
+
 interface PresentationsProps {
   presentations: Presentation[];
 }
 
 const Presentations = ({ presentations }: PresentationsProps) => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const sections = useMemo<PresentationSection[]>(() => {
+    if (!appConfig.presentations.sectionByMetadataType) {
+      return [
+        {
+          category: {
+            id: "all",
+            label: "Présentations",
+            type: "all",
+          },
+          items: presentations,
+        },
+      ];
+    }
 
-  const filteredPresentations = useMemo(() => {
-    return presentations.filter((presentation) => {
-      const searchLower = searchTerm.toLowerCase();
-      const nameMatch = presentation.name.toLowerCase().includes(searchLower);
-      const tagsMatch = presentation.tags.some((tag) =>
-        tag.toLowerCase().includes(searchLower)
-      );
-      return nameMatch || tagsMatch;
-    });
-  }, [presentations, searchTerm]);
+    const categories = getPresentationCategories();
+    const sectionsByType = new Map<string, Presentation[]>();
+
+    for (const category of categories) {
+      sectionsByType.set(category.type, []);
+    }
+
+    const uncategorized: Presentation[] = [];
+
+    for (const presentation of presentations) {
+      const type = presentation.type?.trim();
+      if (!type || !sectionsByType.has(type)) {
+        uncategorized.push(presentation);
+        continue;
+      }
+      sectionsByType.get(type)!.push(presentation);
+    }
+
+    const sectionList: PresentationSection[] = categories
+      .map((category) => ({
+        category,
+        items: sectionsByType.get(category.type) || [],
+      }))
+      .filter((section) => section.items.length > 0);
+
+    if (uncategorized.length > 0) {
+      sectionList.push({
+        category: {
+          id: "autres",
+          label: appConfig.presentations.uncategorizedLabel,
+          type: appConfig.presentations.uncategorizedLabel,
+        },
+        items: uncategorized,
+      });
+    }
+
+    return sectionList;
+  }, [presentations]);
 
   return (
     <motion.section
@@ -64,76 +96,56 @@ const Presentations = ({ presentations }: PresentationsProps) => {
       transition={{ duration: 0.3, delay: 0.1 }}
       className="pb-12 px-4 max-w-7xl mx-auto"
     >
-      <div className="mb-8 max-w-2xl mx-auto">
-        <div className="relative">
-          <Search
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-            size={20}
-          />
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Rechercher..."
-            className="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent shadow-sm"
-          />
-          {searchTerm && (
-            <button
-              onClick={() => setSearchTerm("")}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              <X size={20} />
-            </button>
-          )}
-        </div>
-        {searchTerm && (
-          <p className="text-sm text-gray-600 mt-2 text-center">
-            {filteredPresentations.length} résultat
-            {filteredPresentations.length > 1 ? "s" : ""} trouvé
-            {filteredPresentations.length > 1 ? "s" : ""}
-          </p>
-        )}
-      </div>
-
-      {filteredPresentations.length === 0 ? (
+      {presentations.length === 0 ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center py-12"
         >
-          <p className="text-xl text-gray-600 mb-2">
+          <p className="text-xl text-brand-muted mb-2">
             Aucune présentation trouvée
           </p>
-          <p className="text-gray-500">Essayez avec d'autres mots-clés</p>
+          <p className="text-brand-subtle">Essayez avec d'autres mots-clés</p>
         </motion.div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
-          {filteredPresentations.map((presentation, index) => {
-            const colorIndex = getColorIndex(index);
-            const colorGradient = colorPalette[colorIndex];
+        <div className="space-y-10">
+          {sections.map((section, sectionIndex) => (
+            <section key={section.category.id} className="space-y-4">
+              <div className="text-left">
+                <h2 className="text-2xl font-semibold text-brand-text">
+                  {section.category.label}
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
+                {section.items.map((presentation, index) => {
+                  const colorIndex = getColorIndex(index + sectionIndex * 3);
+                  const colorGradient = colorPalette[colorIndex];
 
-            return (
-              <motion.div
-                key={presentation.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.2, delay: 0.05 * index }}
-                className="flex"
-              >
-                <Card
-                  id={presentation.id}
-                  name={presentation.name}
-                  description={presentation.description}
-                  duration={presentation.duration}
-                  level={presentation.level}
-                  type={presentation.type}
-                  tags={presentation.tags}
-                  link={`/presentations/${presentation.id}`}
-                  colorGradient={colorGradient}
-                />
-              </motion.div>
-            );
-          })}
+                  return (
+                    <motion.div
+                      key={presentation.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.2, delay: 0.04 * index }}
+                      className="flex"
+                    >
+                      <Card
+                        id={presentation.id}
+                        name={presentation.name}
+                        description={presentation.description}
+                        duration={presentation.duration}
+                        level={presentation.level}
+                        type={presentation.type}
+                        tags={presentation.tags}
+                        link={`/presentations/${presentation.id}`}
+                        colorGradient={colorGradient}
+                      />
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </section>
+          ))}
         </div>
       )}
     </motion.section>

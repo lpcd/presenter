@@ -126,7 +126,7 @@ const Support = () => {
   }
 
   return (
-    <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col min-h-screen">
+    <div className="relative bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 flex flex-col min-h-screen">
       <Header
         presentationId={presentationId}
         title={content.title}

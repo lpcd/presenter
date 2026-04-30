@@ -20,13 +20,13 @@ const defaultModules: ModuleItem[] = [];
 
 const Modules = ({ modules = defaultModules }: ModulesProps) => {
   return (
-    <section className="py-12 sm:py-16 px-4 sm:px-8 bg-gray-50 min-h-screen flex flex-col items-center">
+    <section className="py-12 sm:py-16 px-4 sm:px-8 bg-brand-page min-h-screen flex flex-col items-center">
       <motion.h2
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.3 }}
-        className="text-4xl sm:text-5xl font-bold mb-8 sm:mb-12 text-gray-800 text-center"
+        className="text-4xl sm:text-5xl font-bold mb-8 sm:mb-12 text-brand-text text-center"
       >
         Modules
       </motion.h2>
@@ -45,10 +45,8 @@ const Modules = ({ modules = defaultModules }: ModulesProps) => {
               transition={{ duration: 0.25, delay: index * 0.05 }}
               whileHover={{ y: -8, scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className={`relative bg-white rounded-2xl p-6 sm:p-8 shadow-md border-t-4 focus-within:ring-4 focus-within:ring-primary/20 ${
-                module.optional
-                  ? "border-gray-400 opacity-75"
-                  : "border-primary"
+              className={`relative bg-surface rounded-2xl p-6 sm:p-8 shadow-md border-t-4 focus-within:ring-4 focus-within:ring-primary/20 ${
+                module.optional ? "border-border opacity-75" : "border-primary"
               } ${
                 module.link
                   ? "cursor-pointer hover:shadow-xl transition-shadow"
@@ -63,7 +61,7 @@ const Modules = ({ modules = defaultModules }: ModulesProps) => {
                   transition={{ duration: 0.25, delay: index * 0.05 + 0.1 }}
                   className={`flex-shrink-0 inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br text-white text-xl sm:text-2xl font-bold rounded-xl ${
                     module.optional
-                      ? "from-gray-400 to-gray-500"
+                      ? "from-surface-strong to-border"
                       : "from-primary to-primary-dark"
                   }`}
                 >
@@ -72,13 +70,13 @@ const Modules = ({ modules = defaultModules }: ModulesProps) => {
                 <div className="flex-1 min-w-0">
                   <h3
                     className={`text-xl sm:text-2xl font-semibold mb-1 line-clamp-2 ${
-                      module.optional ? "text-gray-600" : "text-gray-800"
+                      module.optional ? "text-brand-muted" : "text-brand-text"
                     }`}
                   >
                     <InlineMarkdown content={module.title} />
                   </h3>
                   {module.optional && (
-                    <p className="text-xs sm:text-sm italic text-gray-500">
+                    <p className="text-xs sm:text-sm italic text-brand-subtle">
                       Facultatif
                     </p>
                   )}
@@ -88,7 +86,7 @@ const Modules = ({ modules = defaultModules }: ModulesProps) => {
                   module.duration !== "0min" && (
                     <p
                       className={`text-xs sm:text-sm font-medium ${
-                        module.optional ? "text-gray-500" : "text-primary"
+                        module.optional ? "text-brand-subtle" : "text-primary"
                       }`}
                     >
                       ⏱️ {module.duration}
@@ -97,13 +95,13 @@ const Modules = ({ modules = defaultModules }: ModulesProps) => {
               </div>
               <div
                 className={`text-sm sm:text-base leading-relaxed mb-3 ${
-                  module.optional ? "text-gray-500" : "text-gray-600"
+                  module.optional ? "text-brand-subtle" : "text-brand-muted"
                 }`}
               >
                 <InlineMarkdown content={module.description} />
               </div>
               {module.topics && module.topics.length > 0 && (
-                <ul className="text-xs sm:text-sm text-gray-500 list-disc list-inside space-y-1">
+                <ul className="text-xs sm:text-sm text-brand-subtle list-disc list-inside space-y-1">
                   {module.topics.length > 5 ? (
                     <>
                       {module.topics.slice(0, 4).map((topic, idx) => (
@@ -111,7 +109,7 @@ const Modules = ({ modules = defaultModules }: ModulesProps) => {
                           <InlineMarkdown content={topic} />
                         </li>
                       ))}
-                      <li className="text-gray-400">...</li>
+                      <li className="text-brand-subtle">...</li>
                       <li key={module.topics.length - 1}>
                         <InlineMarkdown
                           content={module.topics[module.topics.length - 1]}

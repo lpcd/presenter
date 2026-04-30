@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import type { ParsedContent } from "./types";
 import { Header } from "./components/Header";
@@ -34,9 +34,7 @@ const Presentation = () => {
   } | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
-  const [hideControlsTimeout, setHideControlsTimeout] = useState<number | null>(
-    null,
-  );
+  const hideControlsTimeoutRef = useRef<number | null>(null);
   const [presentationName, setPresentationName] = useState<string>("");
   const [isEditingSlideNumber, setIsEditingSlideNumber] = useState(false);
   const [isControlsLocked, setIsControlsLocked] = useState(true);
@@ -77,9 +75,9 @@ const Presentation = () => {
 
   useEffect(() => {
     if (isControlsLocked) {
-      if (hideControlsTimeout) {
-        clearTimeout(hideControlsTimeout);
-        setHideControlsTimeout(null);
+      if (hideControlsTimeoutRef.current) {
+        clearTimeout(hideControlsTimeoutRef.current);
+        hideControlsTimeoutRef.current = null;
       }
       setShowControls(true);
       return;
@@ -89,11 +87,11 @@ const Presentation = () => {
     const timeout = window.setTimeout(() => {
       setShowControls(false);
     }, 3000);
-    setHideControlsTimeout(timeout);
+    hideControlsTimeoutRef.current = timeout;
 
     return () => {
       clearTimeout(timeout);
-      setHideControlsTimeout(null);
+      hideControlsTimeoutRef.current = null;
     };
   }, [isControlsLocked]);
 
@@ -118,24 +116,24 @@ const Presentation = () => {
         if (!showControls) {
           setShowControls(true);
         }
-        if (!hideControlsTimeout) {
+        if (!hideControlsTimeoutRef.current) {
           const timeout = window.setTimeout(() => {
             setShowControls(false);
-            setHideControlsTimeout(null);
+            hideControlsTimeoutRef.current = null;
           }, 3000);
-          setHideControlsTimeout(timeout);
+          hideControlsTimeoutRef.current = timeout;
         }
       } else {
         if (showControls) {
           setShowControls(false);
         }
-        if (hideControlsTimeout) {
-          clearTimeout(hideControlsTimeout);
-          setHideControlsTimeout(null);
+        if (hideControlsTimeoutRef.current) {
+          clearTimeout(hideControlsTimeoutRef.current);
+          hideControlsTimeoutRef.current = null;
         }
       }
     },
-    [hideControlsTimeout, showControls, isEditingSlideNumber, isControlsLocked],
+    [showControls, isEditingSlideNumber, isControlsLocked],
   );
 
   const toggleFullscreen = useCallback(async () => {
@@ -337,7 +335,7 @@ const Presentation = () => {
   return (
     <div
       ref={(el) => el?.focus()}
-      className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col min-h-screen overflow-hidden"
+      className="relative bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 flex flex-col min-h-screen overflow-hidden"
       onKeyDown={handleKeyDown}
       onMouseMove={handleMouseMove}
       tabIndex={0}
